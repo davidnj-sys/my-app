@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Roe Family Budget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Public+Sans:wght@400;600;700&family=Spline+Sans+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#203A43; --teal:#2E6E64; --teal-dk:#1F4F47; --gold:#C9A227;
+    --green:#1E6B4F; --paper:#F2F5F4; --card:#FFFFFF; --ink:#22302D;
+    --muted:#5D6E6A; --line:#DCE5E2; --band:#EAF0EE;
+    --disp:'Fraunces',Georgia,serif; --body:'Public Sans',system-ui,sans-serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.55}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  /* Header */
+  header{background:var(--navy);color:#fff;padding:44px 0 0}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.12;margin:.35rem 0 .6rem}
+  .lede{color:#C9D6D2;font-size:1rem;max-width:52ch;margin-bottom:26px}
+  .goldbar{height:5px;background:var(--gold)}
+
+  /* Edition toggle */
+  .toggle{display:flex;gap:6px;background:#182D35;border-radius:999px;padding:5px;width:max-content;margin-bottom:-24px;position:relative;z-index:2}
+  .toggle button{font-family:var(--body);font-weight:600;font-size:.85rem;border:0;background:transparent;color:#9FB4AF;padding:9px 16px;border-radius:999px;cursor:pointer}
+  .toggle button[aria-pressed="true"]{background:var(--gold);color:#1E2B26}
+  .toggle button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  /* Waterfall hero */
+  .flow{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(32,58,67,.10);padding:26px 22px 20px;margin-top:44px}
+  .flow h2{font-family:var(--disp);font-size:1.15rem;margin-bottom:4px}
+  .flow p.sub{color:var(--muted);font-size:.85rem;margin-bottom:18px}
+  .step{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:11px 12px;border-radius:9px;margin-bottom:6px}
+  .step .n{font-weight:600;font-size:.92rem}
+  .step .d{font-size:.78rem;color:var(--muted);display:block;font-weight:400}
+  .step .amt{font-family:var(--mono);font-weight:700;white-space:nowrap}
+  .s-in{background:var(--band)}
+  .s-sav{background:#E4F0E9;border-left:4px solid var(--green)}
+  .s-mid{background:#F5F7F6}
+  .s-out{background:var(--green);color:#fff}
+  .s-out .d{color:#CBE4D6}
+  .arrow{ text-align:center;color:#B7C6C1;font-size:.8rem;line-height:1;margin:2px 0}
+
+  /* Sections */
+  section{margin:34px 0}
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .sec-h h2{font-family:var(--disp);font-size:1.3rem}
+  .sec-h .tot{font-family:var(--mono);font-weight:700;color:var(--teal-dk);font-size:.95rem}
+  .sec-note{color:var(--muted);font-size:.88rem;margin-bottom:14px;max-width:60ch}
+
+  /* Expense rows */
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;overflow:hidden}
+  details[open]{border-color:var(--teal)}
+  summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;cursor:pointer;font-weight:600;font-size:.95rem}
+  summary::-webkit-details-marker{display:none}
+  summary:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+  summary .amt{font-family:var(--mono);font-weight:700;color:var(--teal-dk);white-space:nowrap}
+  summary .chev{color:#9FB0AB;font-size:.75rem;margin-left:6px;transition:transform .15s}
+  details[open] .chev{transform:rotate(90deg)}
+  .body{padding:0 16px 16px;color:#3A4A46;font-size:.92rem;border-top:1px dashed var(--line);padding-top:12px}
+  .body p{margin-bottom:9px}
+  .body p:last-child{margin-bottom:0}
+  .body ul{margin:6px 0 9px 18px}
+  .body li{margin-bottom:3px}
+  .tag{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;background:var(--band);color:var(--teal-dk);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle}
+  .tag.new{background:#F4EAD0;color:#8A6D14}
+  .tag.ends{background:#EFE4DE;color:#8A4B2D}
+  .subrow{display:flex;justify-content:space-between;font-size:.88rem;padding:5px 0;border-bottom:1px dotted var(--line)}
+  .subrow:last-child{border-bottom:0}
+  .subrow .m{font-family:var(--mono);font-weight:500}
+
+  /* Plan cards */
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:14px}
+  .plan h3{font-family:var(--disp);font-size:1.08rem;margin-bottom:8px}
+  .plan p{font-size:.92rem;color:#3A4A46;margin-bottom:9px}
+  .plan p:last-child{margin-bottom:0}
+  svg text{font-family:var(--mono)}
+  .legend{font-size:.75rem;color:var(--muted);margin-top:6px}
+
+  /* Footer */
+  footer{background:var(--navy);color:#AFC2BD;padding:30px 0 40px;margin-top:48px;font-size:.85rem}
+  footer .goldbar{margin-bottom:26px}
+  footer strong{color:#fff}
+  @media(max-width:480px){ summary{font-size:.9rem} .step .n{font-size:.88rem} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="kicker">Roe household · built July 18, 2026</span>
+    <h1>Where our money goes,<br>and why.</h1>
+    <p class="lede">Dave rebuilt the whole budget from our actual statements. Every line below is clickable — tap anything to see what it is, what it costs, and the thinking behind it. Five minutes and you'll know everything he knows.</p>
+    <div class="toggle" role="group" aria-label="Choose budget edition">
+      <button id="btn-now" aria-pressed="true">Now (Jul–Aug)</button>
+      <button id="btn-sep" aria-pressed="false">September (raises)</button>
+    </div>
+  </div>
+  <div class="goldbar"></div>
+</header>
+
+<main class="wrap">
+
+  <!-- Payday waterfall -->
+  <div class="flow" id="flow"></div>
+
+  <div id="sections"></div>
+
+  <!-- The plan -->
+  <section id="plan">
+    <div class="sec-h"><h2>The plan behind the numbers</h2></div>
+    <p class="sec-note">Four things we're doing on purpose. Everything above exists to make these work.</p>
+
+    <div class="plan">
+      <h3>1 · Rebuild savings while the construction bills land</h3>
+      <p>Savings sits at about <strong>$24,000</strong> right now. Between the balcony/roof project ($2,800 down, three more $2,800 checks coming) and ~$2,500 for the neighbor's railing work, we'll dip to roughly <strong>$18,000 in November</strong> — then climb right back.</p>
+      <p>Starting in September, <strong>$750 moves to savings on every payday, before anything else</strong>. Not what's left over at the end of the month — first. That's the one habit that makes the whole thing work.</p>
+      <svg viewBox="0 0 660 190" role="img" aria-label="Savings balance by month, July 2026 to March 2027">
+        <g id="savchart"></g>
+      </svg>
+      <p class="legend">Projected savings balance, thousands. The dip is the construction; the climb is the rebuild.</p>
+    </div>
+
+    <div class="plan">
+      <h3>2 · Debt-free by January 2028</h3>
+      <p>Everything we're financing has an end date, and none of it charges interest as long as we stay on schedule. The one that matters most is <strong>Best Buy</strong> — it's "no interest" only if it's fully paid before its deadlines, so it gets a fixed $250/month on autopay and <em>we don't put anything new on that card</em>.</p>
+      <svg viewBox="0 0 660 150" role="img" aria-label="Payoff timeline for financed items">
+        <g id="debtchart"></g>
+      </svg>
+      <p class="legend">Gold cap = final payment. After each one ends, that money is re-aimed, not re-spent.</p>
+    </div>
+
+    <div class="plan">
+      <h3>3 · College savings that grows by itself</h3>
+      <p>The 529 goes to <strong>$200/month in September</strong>. Then every time a financed item above finishes, its payment rolls into the 529 automatically. With the next two raises adding $200 each, we go from $200 to <strong>$778/month by fall 2028</strong> — without ever feeling a new expense, because the money was already leaving our account.</p>
+      <svg viewBox="0 0 660 160" role="img" aria-label="529 monthly contribution steps from 200 to 778 dollars">
+        <g id="chart529"></g>
+      </svg>
+      <p class="legend">$200 → $280 (Apr '27) → $378 (Jun '27) → $578 (Sept '27) → $778 (Sept '28), per month.</p>
+    </div>
+
+    <div class="plan">
+      <h3>4 · The cruise pays for itself</h3>
+      <p>The Mediterranean cruise ($8,900 due March 2027, plus ~$4,000 airfare) is <strong>not</strong> coming out of savings or the monthly budget. It's mapped to its own money: your summer work, Dave's mentoring income, Robinhood rewards, Amex points, vacation-day sellback, and one of the health-stipend installments. The rule that makes it work: <strong>when your summer checks arrive, they go straight into savings and get fenced off</strong> — not parked in checking where they evaporate.</p>
+    </div>
+
+    <div class="plan">
+      <h3>What's left is genuinely ours</h3>
+      <p>After savings, bills, debt, the kids, and groceries all leave first, there's about <strong>$5,700 a month</strong> that isn't assigned to anything. That covers the irregular stuff (vet, repairs, gifts, copays) with plenty left for actual fun — dinners, games, trips. No category tracking, no guilt. The only daily habit: <strong>glance at the savings balance on payday.</strong> If it's climbing, everything is working.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="goldbar"></div>
+  <div class="wrap">
+    <p><strong>Where these numbers come from:</strong> our Amex and Robinhood statements (March–June 2026), the Verizon and Best Buy bills, the Progressive quote, and both pay stubs. Nothing here is estimated from memory.</p>
+    <p style="margin-top:10px">Questions, or something looks wrong? Ask Dave — he has the receipts. Literally.</p>
+  </div>
+</footer>
+
+<script>
+const fmt = n => '$' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+const fmt2 = n => '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+/* ---------- explainer copy (shared) ---------- */
+const X = {
+mortgage: `<p>The house. $1,733 comes out on each payday ($3,466/month total), which includes property taxes and homeowner's escrow. Splitting it across both checks keeps either paycheck from getting wiped out.</p>`,
+tesla: `<p>Dave's 2024 Model 3 payment. Fixed until the loan's done.</p>`,
+pseg: `<p>Electric for the house <em>plus</em> charging the Tesla at home — that's why it looks high compared to a normal electric bill. Charging at home is still far cheaper than gas would be for the same miles. Dave's checking that the car only charges overnight at off-peak rates, which could shave this down.</p>`,
+gas: `<p>Elizabethtown Gas — natural gas heating for the house. We're on their budget payment plan, which spreads the winter heating cost evenly across the year so there's no brutal January bill. That's why it's the same ~$220 every month.</p><p>Note: gasoline for the Mazda isn't a budget line — Danielle's fuel comes out of the flexible money.</p>`,
+water: `<p>Township water/sewer. Not much to say — it's water.</p>`,
+fios: `<p>Home internet. Everything in the house — TVs, laptops, the kids' devices, the antenna setup coming in September — runs through this one line.</p>`,
+cleaning: `<p>The cleaning service, $175 out of each paycheck ($350/month).</p>`,
+vzw: `<p>All our phone lines and watches on one family plan — us, the kids, plus Andrea and Lou. <strong>Why we pay for Andrea and Lou:</strong> they babysit constantly. Their two lines cost about $94/month; equivalent childcare would run far more. It's the best deal in this budget.</p><p>Why we can't just switch to a cheaper carrier: five of the phones came "free," but the free part is monthly credits that only exist while we stay on Verizon. Leaving would make ~$2,800 of phone balances due immediately. So we stay put until those run out, and Dave trimmed the add-ons instead.</p>`,
+insurance: `<p>Household insurance line, $100/month.</p>`,
+ezpass: `<p>Tolls — Parkway, Turnpike, bridges. Auto-reloads.</p>`,
+tempo: `<p>The Tempo home gym <em>membership</em> only. The equipment itself was financed separately — that's the Affirm line under Financing. Splitting them means we can see exactly when the equipment is paid off (March 2027) while the membership continues.</p>`,
+landscaping: `<p>Lawn service. Dave's considering taking over the mowing himself next spring — small yard, ~20 minutes, saves about $1,000/year plus the $150 fall cleanup (we have no trees; a mulching mower handles the neighbor's stray leaves). Decision in April.</p>`,
+plan529: `<p>College savings for Blake and Chelsea, one combined plan, treated like a bill so it never gets skipped.</p><p><strong>The escalator:</strong> $200/month starting September. When the Tempo equipment finishes in April, its $80 rolls in ($280). When the couch and Dave's phone finish in June, their $98 rolls in ($378). The next two raises each add $200 more — <strong>$778/month by fall 2028</strong>, right as Blake closes in on college. We never feel a single step, because each one is money that was already leaving the account.</p>`,
+affirm: `<p>The Tempo equipment, financed at 0% through Affirm. <strong>7 payments left as of September — done March 2027.</strong> Then the $80 redirects to the kids' 529, not back into spending.</p>`,
+couch: `<p>The living room couch, 0% financing. <strong>9 payments left — done May 2027</strong>, then redirects to the 529.</p>`,
+fold: `<p>Dave's Galaxy Z Fold, financed directly with Samsung (separate from the Verizon bill). <strong>9 payments left — done May 2027</strong>, then redirects to the 529.</p>`,
+bestbuy: `<p>The electronics balance: <strong>$4,048 across seven "no interest if paid in time" promotions</strong>. Here's the catch with these deals: if even one isn't fully paid by its deadline, they charge ALL the interest that's been silently accruing — about <strong>$654 at 29.7%</strong> — retroactively, all at once.</p><p>So this line is $250/month on autopay, sized to clear every deadline with a month to spare. The biggest one: $1,630 due December 2027. Two house rules: the autopay stays at $250 (not the minimum), and <strong>nothing new goes on the Best Buy card</strong> until this is finished. Done January 2028.</p>`,
+carins: `<p>Dave switched us from Plymouth Rock (~$393/month) to Progressive (~$284 equivalent) in July — same coverage, plus <em>gap coverage on the Tesla</em> that we didn't have before, which matters on a financed car that depreciates fast.</p><p>The trick: Progressive gives a ~$180 discount for paying 6 months up front. So instead of paying them monthly, <strong>we set aside $290/month in savings and pay each ~$1,514 term in one shot on the Robinhood card</strong> — which also earns ~$45 back in rewards. The $290 slightly over-collects on purpose, adding a small cushion.</p>`,
+christmas: `<p>New for September: <strong>$300/month, September through December</strong>, so Christmas is cash we already have instead of a January credit-card surprise. Combined with one of Dave's work stipend payments (~$1,800), that funds a ~$3,000 holiday. The line disappears after December; in January it gets smoothed into a year-round gift fund.</p>`,
+savings: `<p>The headline change. <strong>$750 from every paycheck — $1,500/month — moves to savings on payday, before anything discretionary.</strong></p><p>Why now: savings is at ~$24,000 and the balcony/roof project plus the railing work will pull it down to roughly $18,000 by November. This line is what brings it back — around $24,000 by March and climbing after. The old pattern was "save whatever's left," and whatever was left always turned out to be nothing. This flips it.</p>`,
+subs: `<p>Every subscription in the house, on one line so nothing hides. Dave went through the statements in July and cancelled about <strong>$150/month</strong> of stuff we weren't using (Fubo, duplicate Apple charges, a Dropbox we didn't know we had, and some AI-app overlap). What's left, monthly:</p>
+<div class="subrow"><span>Netflix</span><span class="m">$28.78</span></div>
+<div class="subrow"><span>Spotify</span><span class="m">$23.45</span></div>
+<div class="subrow"><span>AI (Dave + Danielle + Google w/ storage)</span><span class="m">$60.00</span></div>
+<div class="subrow"><span>Xbox Game Pass</span><span class="m">$20.00</span></div>
+<div class="subrow"><span>Tesla connectivity</span><span class="m">$10.65</span></div>
+<div class="subrow"><span>eero (home wifi)</span><span class="m">$9.99</span></div>
+<div class="subrow"><span>Ring doorbell</span><span class="m">$5.32</span></div>
+<div class="subrow"><span>HP Instant Ink</span><span class="m">$5.00</span></div>
+<div class="subrow"><span>NY Times</span><span class="m">$10.00</span></div>
+<div class="subrow"><span>Substack (deBoer)</span><span class="m">$5.00</span></div>
+<div class="subrow"><span>HBO Max (promo rate)</span><span class="m">$2.99</span></div>
+<div class="subrow"><span>Hulu (promo rate)</span><span class="m">$2.12</span></div>
+<div class="subrow"><span>The Club at Woodbridge (Blake's gym)</span><span class="m">$55.00</span></div>
+<div class="subrow"><span>Woodbridge Community Center (us)</span><span class="m">$25.00</span></div>
+<p style="margin-top:9px">Baseball season adds ~$25 for Yankees games (April–September). The HBO and Hulu promo rates will jump to ~$17 and ~$10 when they expire — known, not a surprise.</p>`,
+blake: `<p>Blake's allowance card: $250 loaded each payday, $500/month. His spending lives on the card — when it's gone, it's gone. That's the whole system.</p>`,
+chelsea: `<p>Chelsea's card: $125 per payday, $250/month. Lower than Blake's for now; the plan is to raise it when she hits high school.</p>`,
+groceries: `<p>$500 per pay period, $1,000/month, built around the meal-prep routine: adult prep, a separate kids' prep, and one hobby-cooking day a week for Dave. This is a planning number, not a hard ceiling — big holiday weeks run over and that's fine; it comes out of the flexible money.</p>`
+};
+
+/* ---------- items ---------- */
+function items(sep){
+  const fixed=[
+    ['Mortgage',3466,X.mortgage],
+    ['Tesla payment',687,X.tesla],
+    ['PSEG (electric + Tesla charging)',525,X.pseg],
+    ['Verizon (7 lines + watches)',358,X.vzw],
+    ['Cleaning service',350,X.cleaning],
+    ['Subscriptions',263.30,X.subs],
+    ['Elizabethtown Gas (heat)',220,X.gas],
+    [sep?'529 college savings':'529 college savings',sep?200:100,X.plan529,sep?'raised':null],
+    ['Landscaping',106,X.landscaping],
+    ['Water',100,X.water],
+    ['Insurance',100,X.insurance],
+    ['EZ Pass (tolls)',100,X.ezpass],
+    ['FiOS internet',65,X.fios],
+    ['Tempo membership',40,X.tempo],
+  ];
+  const financing=[
+    ['Best Buy paydown',250,X.bestbuy,'ends Jan 2028'],
+    ['Affirm — Tempo equipment',80,X.affirm,'ends Mar 2027'],
+    ['Couch',56,X.couch,'ends May 2027'],
+    ['Galaxy Z Fold',42,X.fold,'ends May 2027'],
+  ];
+  const funds=[
+    ...(sep?[['Savings rebuild',1500,X.savings,'new']]:[]),
+    ['Car insurance fund',290,X.carins],
+    ...(sep?[['Christmas fund',300,X.christmas,'Sept–Dec']]:[]),
+  ];
+  const family=[
+    ['Groceries & meal prep',1000,X.groceries],
+    ['Blake\u2019s allowance card',500,X.blake],
+    ['Chelsea\u2019s allowance card',250,X.chelsea],
+  ];
+  return {fixed,financing,funds,family};
+}
+
+const ED = {
+  now:{ income:15664, label:'Now · July–August', note:'What our current paychecks look like, before the raises land.',
+        daveNote:'Dave $5,094/check', danNote:'Danielle $2,738/check' },
+  sep:{ income:16510, label:'September · both raises live', note:'Dave +$170/check, Danielle +$285/check. Plus the savings rebuild, the Christmas fund, and the bigger 529 all switch on.',
+        daveNote:'Dave $5,265/check', danNote:'Danielle $2,990/check' }
+};
+
+function sum(list){return list.reduce((a,i)=>a+i[1],0)}
+
+function renderFlow(sep){
+  const d=items(sep), e=ED[sep?'sep':'now'];
+  const bills=sum(d.fixed), fin=sum(d.financing), funds=sum(d.funds), fam=sum(d.family);
+  const left=e.income-bills-fin-funds-fam;
+  const steps=[
+    ['s-in','Money in',`${e.daveNote} · ${e.danNote} · two paydays each`,e.income],
+    ...(funds? [['s-sav','Savings & funds leave first','Payday transfers — before anything optional',funds]]:[]),
+    ['s-mid','Bills','The house, cars, utilities, phones, subscriptions',bills],
+    ['s-mid','Debt paydown','Every item 0% interest, every item with an end date',fin],
+    ['s-mid','Kids & groceries','Allowance cards + the meal-prep budget',fam],
+    ['s-out','Left for us','Fun, dinners, and the irregular stuff — no tracking needed',left],
+  ];
+  document.getElementById('flow').innerHTML =
+    `<h2>Payday, in order</h2><p class="sub">${e.label} — this is the sequence money actually moves in.</p>` +
+    steps.map((s,i)=>`${i? '<div class="arrow">▼</div>':''}<div class="step ${s[0]}"><span class="n">${s[1]}<span class="d">${s[2]}</span></span><span class="amt">${s[0]==='s-in'||s[0]==='s-out'? fmt(Math.round(s[3])) : '\u2212 '+fmt(Math.round(s[3]))}</span></div>`).join('') +
+    `<p class="legend" style="margin-top:10px">Monthly figures. ${sep?'':'The savings-first transfer starts in September — flip the toggle to see it.'}</p>`;
+}
+
+function row(i){
+  const tag = i[3]? `<span class="tag ${i[3]==='new'||i[3]==='raised'?'new':'ends'}">${i[3]}</span>`:'';
+  return `<details><summary><span>${i[0]}${tag}</span><span><span class="amt">${i[1]%1? fmt2(i[1]):fmt(i[1])}</span><span class="chev">▶</span></span></summary><div class="body">${i[2]}</div></details>`;
+}
+
+function renderSections(sep){
+  const d=items(sep);
+  const blocks=[
+    ['Bills & fixed costs', d.fixed, 'The predictable stuff. Same every month, autopaid where possible.'],
+    ['Debt paydown', d.financing, 'Everything here is 0% interest with a hard end date — and when each one ends, its payment gets redirected (mostly to the 529), not absorbed back into spending.'],
+    ['Savings & sinking funds', d.funds, sep? 'Money we pay ourselves. These leave on payday, first.' : 'The insurance fund runs now; the big savings-first transfer and Christmas fund switch on in September.'],
+    ['Kids & groceries', d.family, 'Set amounts per payday so they\u2019re predictable for everyone, including the kids.'],
+  ];
+  document.getElementById('sections').innerHTML = blocks.map(b=>
+    `<section><div class="sec-h"><h2>${b[0]}</h2><span class="tot">${fmt(Math.round(sum(b[1])))} / mo</span></div><p class="sec-note">${b[2]}</p>${b[1].map(row).join('')}</section>`
+  ).join('');
+}
+
+/* ---------- charts ---------- */
+function savChart(){
+  const data=[['Jul',24.0],['Aug',21.2],['Sep',20.6],['Oct',19.3],['Nov',18.3],['Dec',19.8],['Jan',21.3],['Feb',22.8],['Mar',24.3]];
+  const min=16,max=26,W=660,H=190,pad=34,bw=44,gap=(W-2*pad-9*bw)/8;
+  let s='';
+  data.forEach((d,i)=>{
+    const x=pad+i*(bw+gap), h=(d[1]-min)/(max-min)*(H-58), y=H-30-h;
+    const low=d[1]===18.3;
+    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="4" fill="${low?'#C9A227':'#2E6E64'}"/>`;
+    s+=`<text x="${x+bw/2}" y="${y-6}" text-anchor="middle" font-size="12" font-weight="700" fill="#1F4F47">${d[1].toFixed(1)}</text>`;
+    s+=`<text x="${x+bw/2}" y="${H-12}" text-anchor="middle" font-size="11" fill="#5D6E6A">${d[0]}</text>`;
+  });
+  document.getElementById('savchart').innerHTML=s;
+}
+function debtChart(){
+  const rows=[['Affirm (Tempo)','Mar \u201927',8],['Couch','May \u201927',10],['Z Fold','May \u201927',10],['Best Buy','Jan \u201928',18]];
+  const W=660,lab=150,pad=8,unit=(W-lab-70)/18;
+  let s='';
+  rows.forEach((r,i)=>{
+    const y=14+i*34;
+    s+=`<text x="0" y="${y+13}" font-size="12" fill="#22302D">${r[0]}</text>`;
+    s+=`<rect x="${lab}" y="${y}" width="${(r[2]-1)*unit}" height="18" rx="4" fill="#2E6E64"/>`;
+    s+=`<rect x="${lab+(r[2]-1)*unit}" y="${y}" width="${unit}" height="18" rx="4" fill="#C9A227"/>`;
+    s+=`<text x="${lab+r[2]*unit+8}" y="${y+13}" font-size="11" font-weight="700" fill="#1F4F47">${r[1]}</text>`;
+  });
+  document.getElementById('debtchart').innerHTML=s;
+}
+function chart529(){
+  const steps=[[200,'Sep \u201926'],[280,'Apr \u201927'],[378,'Jun \u201927'],[578,'Sep \u201927'],[778,'Sep \u201928']];
+  const W=660,H=160,pad=30,bw=90,gap=(W-2*pad-5*bw)/4;
+  let s='';
+  steps.forEach((d,i)=>{
+    const x=pad+i*(bw+gap), h=d[0]/778*(H-56), y=H-28-h;
+    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="4" fill="${i===4?'#C9A227':'#2E6E64'}"/>`;
+    s+=`<text x="${x+bw/2}" y="${y-6}" text-anchor="middle" font-size="12" font-weight="700" fill="#1F4F47">$${d[0]}</text>`;
+    s+=`<text x="${x+bw/2}" y="${H-10}" text-anchor="middle" font-size="11" fill="#5D6E6A">${d[1]}</text>`;
+  });
+  document.getElementById('chart529').innerHTML=s;
+}
+
+/* ---------- toggle ---------- */
+let sepMode=false;
+function renderAll(){renderFlow(sepMode);renderSections(sepMode);
+  document.getElementById('btn-now').setAttribute('aria-pressed',String(!sepMode));
+  document.getElementById('btn-sep').setAttribute('aria-pressed',String(sepMode));
+}
+document.getElementById('btn-now').addEventListener('click',()=>{sepMode=false;renderAll()});
+document.getElementById('btn-sep').addEventListener('click',()=>{sepMode=true;renderAll()});
+renderAll();savChart();debtChart();chart529();
+</script>
+</body>
+</html>
