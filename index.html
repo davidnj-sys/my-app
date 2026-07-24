@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Pier 17</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pier 17">
+<meta name="theme-color" content="#0E1626">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root {
+    --base:      #0E1626;
+    --card:      #17233A;
+    --card-hi:   #1E2D48;
+    --line:      #2A3A57;
+    --gold:      #E8B33C;
+    --gold-deep: #C8912A;
+    --signal:    #5FD0D8;
+    --text:      #F2EFE7;
+    --muted:     #8D9AB0;
+    --dim:       #5C6A82;
+    --display: "Roboto Condensed", "Avenir Next Condensed", "Arial Narrow", Roboto, sans-serif;
+    --body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--base);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.45;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 28px) env(safe-area-inset-left);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .wrap { padding: 0 18px; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    padding: 22px 18px 14px 18px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mast-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 27px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+  }
+  .mast-sub {
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 6px;
+  }
+  .clock {
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--signal);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ---------- now card ---------- */
+  .now {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 18px 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .now::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--gold);
+  }
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--signal);
+    animation: beat 2.4s ease-in-out infinite;
+  }
+  @keyframes beat { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+
+  .now-title {
+    font-family: var(--display);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.05;
+    margin: 10px 0 6px 0;
+    letter-spacing: 0.3px;
+  }
+  .now-detail { color: var(--muted); font-size: 14.5px; margin-bottom: 14px; }
+  .now-next {
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .now-next b { color: var(--text); font-weight: 600; }
+  .now-next .cd { color: var(--signal); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* ---------- buttons ---------- */
+  .primary {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 17px 16px;
+    background: var(--gold);
+    color: #14203A;
+    border: none;
+    border-radius: 13px;
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 5px 0 var(--gold-deep);
+    transition: transform 0.06s ease, box-shadow 0.06s ease;
+  }
+  .primary:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--gold-deep); }
+  .primary small {
+    display: block;
+    font-family: var(--body);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: none;
+    opacity: 0.72;
+    margin-top: 2px;
+  }
+
+  .quickrow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+    margin-top: 10px;
+  }
+  .quick {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 12px 6px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    display: block;
+  }
+  .quick:active { background: var(--card-hi); }
+  .quick span { display: block; font-size: 10px; color: var(--dim); font-weight: 500; margin-top: 2px; }
+
+  /* ---------- sections ---------- */
+  h2.sec {
+    font-family: var(--display);
+    font-size: 13px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin: 30px 0 12px 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2.sec::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* ---------- timeline ---------- */
+  .step {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .step:last-child { border-bottom: none; }
+  .step .t {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+    padding-top: 1px;
+  }
+  .step .h { font-weight: 600; font-size: 15px; }
+  .step .d { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+  .step.past { opacity: 0.38; }
+  .step.past .t { color: var(--dim); }
+  .step.live {
+    background: var(--card-hi);
+    border-radius: 10px;
+    padding: 13px 12px;
+    border-bottom-color: transparent;
+    margin: 0 -12px;
+  }
+  .step.live .t { color: var(--signal); }
+  .tag {
+    display: inline-block;
+    font-size: 9.5px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--signal);
+    border: 1px solid var(--signal);
+    border-radius: 4px;
+    padding: 1px 5px;
+    margin-left: 7px;
+    vertical-align: 2px;
+    font-weight: 700;
+  }
+
+  /* ---------- tickets ---------- */
+  .ticket-note {
+    background: rgba(232,179,60,0.08);
+    border: 1px solid rgba(232,179,60,0.35);
+    border-radius: 11px;
+    padding: 13px 14px;
+    font-size: 13.5px;
+    color: #E9DFC6;
+    margin-bottom: 14px;
+  }
+  .ticket-note b { color: var(--gold); }
+
+  .shelf {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+    margin-top: 12px;
+  }
+  .shot {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--card);
+  }
+  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .shot .kill {
+    position: absolute;
+    top: 5px; right: 5px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(10,16,28,0.82);
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    line-height: 24px;
+    padding: 0;
+    text-align: center;
+  }
+  .addbtn {
+    aspect-ratio: 3 / 4;
+    border: 1.5px dashed var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-family: var(--body);
+  }
+  .addbtn .plus { font-size: 24px; color: var(--gold); line-height: 1; }
+  .empty { color: var(--dim); font-size: 13.5px; margin-top: 10px; }
+
+  textarea.notes {
+    width: 100%;
+    margin-top: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    color: var(--text);
+    padding: 13px;
+    font-family: var(--body);
+    font-size: 14.5px;
+    min-height: 84px;
+    resize: vertical;
+  }
+  textarea.notes:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .saved { font-size: 11.5px; color: var(--dim); margin-top: 6px; height: 14px; }
+
+  /* ---------- viewer ---------- */
+  .viewer {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 90;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+  }
+  .viewer.on { display: flex; }
+  .viewer img { max-width: 100%; max-height: 84vh; object-fit: contain; border-radius: 6px; }
+  .viewer .close {
+    position: absolute;
+    top: calc(env(safe-area-inset-top) + 14px);
+    right: 16px;
+    background: rgba(255,255,255,0.13);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    font-size: 21px;
+  }
+  .viewer .hint {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom) + 18px);
+    left: 0; right: 0;
+    text-align: center;
+    color: #7B879B;
+    font-size: 12px;
+  }
+
+  /* ---------- reference ---------- */
+  .ref { background: var(--card); border: 1px solid var(--line); border-radius: 13px; padding: 4px 15px; }
+  .ref .row { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .ref .row:last-child { border-bottom: none; }
+  .ref .k { color: var(--muted); flex-shrink: 0; }
+  .ref .v { text-align: right; font-weight: 600; }
+  .ref a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+  .preview-bar {
+    margin-top: 22px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 13px 15px;
+  }
+  .preview-bar label { font-size: 12.5px; color: var(--muted); display: block; margin-bottom: 8px; }
+  .preview-bar input[type=range] { width: 100%; accent-color: var(--gold); }
+  .preview-bar button {
+    margin-top: 9px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: 7px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-family: var(--body);
+  }
+  footer { text-align: center; color: var(--dim); font-size: 11px; margin-top: 26px; letter-spacing: 0.4px; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div>
+    <h1 class="mast-title">Passion Pit</h1>
+    <div class="mast-sub">Rooftop at Pier 17 &middot; Sat Jul 25</div>
+  </div>
+  <div class="clock" id="clock">--:--</div>
+</div>
+
+<div class="wrap">
+
+  <div class="now">
+    <div class="eyebrow"><span class="pulse"></span><span id="eyebrow">Right now</span></div>
+    <div class="now-title" id="nowTitle">Loading</div>
+    <div class="now-detail" id="nowDetail"></div>
+    <div class="now-next">
+      <div>Next: <b id="nextTitle">&mdash;</b></div>
+      <div class="cd" id="nextCd"></div>
+    </div>
+  </div>
+
+  <a class="primary" id="primaryBtn" href="#">Ride<small>Opens Uber</small></a>
+
+  <div class="quickrow">
+    <a class="quick" id="ticketsJump" href="#tickets">Tickets<span>Your shelf</span></a>
+    <a class="quick" href="https://www.ticketmaster.com/my-events" target="_blank" rel="noopener">Ticketmaster<span>Scan at gate</span></a>
+    <a class="quick" href="https://www.njtransit.com/" target="_blank" rel="noopener">NJ Transit<span>Track &amp; times</span></a>
+  </div>
+
+  <h2 class="sec">Getting There</h2>
+  <div id="tl-out"></div>
+
+  <h2 class="sec">The Show</h2>
+  <div id="tl-show"></div>
+
+  <h2 class="sec">Getting Home</h2>
+  <div id="tl-back"></div>
+
+  <h2 class="sec" id="tickets">Tickets</h2>
+  <div class="ticket-note">
+    <b>Read this once, now.</b> Pier 17 runs Ticketmaster mobile entry. Those barcodes refresh every few seconds, so a photo stored here will not scan at the gate. Open the Ticketmaster app tonight, view each ticket so it caches, transfer the other three to your group, and add them to Google Wallet. Use the shelf below for order confirmations, parking, and anything else you want in one place.
+  </div>
+  <div class="shelf" id="shelf"></div>
+  <div class="empty" id="shelfEmpty">Nothing saved yet. Tap the plus to add a photo.</div>
+  <input type="file" id="picker" accept="image/*" multiple hidden>
+
+  <textarea class="notes" id="notes" placeholder="Order number, seat or GA section, who is holding which ticket, parking spot at Woodbridge station."></textarea>
+  <div class="saved" id="savedFlag"></div>
+
+  <h2 class="sec">Reference</h2>
+  <div class="ref">
+    <div class="row"><span class="k">Venue</span><span class="v">89 South St, NYC</span></div>
+    <div class="row"><span class="k">Uber pickup, Penn</span><span class="v">W 31st St &amp; 7th Ave</span></div>
+    <div class="row"><span class="k">Uber pickup, Seaport</span><span class="v">Pearl St &amp; Fulton St</span></div>
+    <div class="row"><span class="k">Train home</span><span class="v">11:02 PM &middot; NJCL</span></div>
+    <div class="row"><span class="k">Last train home</span><span class="v">12:05 AM &rarr; 12:49 AM</span></div>
+    <div class="row"><span class="k">Group</span><span class="v">4 &middot; UberXL fits comfortably</span></div>
+    <div class="row"><span class="k">Directions</span><a href="https://www.google.com/maps/dir/?api=1&amp;destination=89+South+Street+New+York+NY+10038&amp;travelmode=walking" target="_blank" rel="noopener">Open in Maps</a></div>
+  </div>
+
+  <div class="preview-bar">
+    <label for="scrub">Preview the app at another time. Drag to see what the card shows at any point Saturday.</label>
+    <input type="range" id="scrub" min="17" max="24" step="0.25" value="17">
+    <button id="scrubReset">Back to live time</button>
+  </div>
+
+  <footer>Built for one night. Works offline once loaded.</footer>
+</div>
+
+<div class="viewer" id="viewer">
+  <button class="close" id="viewerClose">&times;</button>
+  <img id="viewerImg" alt="Saved ticket">
+  <div class="hint">Turn your screen brightness up before scanning anything.</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DAY = [2026, 6, 25];
+  function at(h, m) { return new Date(DAY[0], DAY[1], DAY[2], h, m, 0, 0); }
+
+  var UBER = "https://m.uber.com/ul/?action=setPickup&pickup=my_location";
+  var toPier = UBER +
+    "&dropoff[latitude]=40.7057&dropoff[longitude]=-74.0027" +
+    "&dropoff[nickname]=" + encodeURIComponent("The Rooftop at Pier 17") +
+    "&dropoff[formatted_address]=" + encodeURIComponent("89 South Street, New York, NY 10038");
+  var toPenn = UBER +
+    "&dropoff[latitude]=40.7503&dropoff[longitude]=-73.9925" +
+    "&dropoff[nickname]=" + encodeURIComponent("New York Penn Station") +
+    "&dropoff[formatted_address]=" + encodeURIComponent("W 31st St & 7th Ave, New York, NY 10001");
+
+  var STEPS = [
+    { t: at(17,20), leg: "out",  h: "Leave the house",       d: "Trinity Lane to Woodbridge station. Park and get to the platform." },
+    { t: at(17,44), leg: "out",  h: "North Jersey Coast Line", d: "Woodbridge into New York Penn Station." },
+    { t: at(18,31), leg: "out",  h: "Arrive Penn Station",    d: "Street level, follow signs to 7th Ave and 31st St." },
+    { t: at(18,38), leg: "out",  h: "Request the Uber",       d: "Everyone on the sidewalk first, then tap. Pin on 31st St." },
+    { t: at(18,45), leg: "out",  h: "Ride downtown",          d: "About 4.5 miles. Twenty to twenty five minutes." },
+    { t: at(19,10), leg: "out",  h: "Arrive Pier 17",         d: "Drop at South St near Fulton. Clear security, head to the roof." },
+    { t: at(18,30), leg: "show", h: "Doors open",             d: "" },
+    { t: at(19,30), leg: "show", h: "Arden Jones",            d: "Opener." },
+    { t: at(20,30), leg: "show", h: "Passion Pit",            d: "Headliner." },
+    { t: at(21,50), leg: "back", h: "Request the ride home",  d: "During the encore, not at curfew. Watch the surge price." },
+    { t: at(22,0),  leg: "show", h: "Curfew",                 d: "Hard stop. The roof clears fast." },
+    { t: at(22,5),  leg: "back", h: "Walk to the pickup",     d: "West on Fulton to Pearl or Water St. Drivers cannot stop at the pier." },
+    { t: at(22,20), leg: "back", h: "Ride uptown",            d: "Back to Penn. Lighter traffic, twenty to twenty five minutes." },
+    { t: at(22,45), leg: "back", h: "Arrive Penn Station",    d: "NJ Transit concourse. Check the monitors for your track." },
+    { t: at(23,2),  leg: "back", h: "Train to Woodbridge",    d: "Southbound North Jersey Coast Line." },
+    { t: at(23,43), leg: "back", h: "Home stretch",           d: "Back at Woodbridge station." }
+  ];
+
+  var offsetMs = 0;
+  function now() { return offsetMs ? new Date(Date.now() + offsetMs) : new Date(); }
+  function fmt(d) {
+    var h = d.getHours(), m = d.getMinutes(), ap = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) h = 12;
+    return h + ":" + (m < 10 ? "0" : "") + m + " " + ap;
+  }
+  function gap(ms) {
+    var mins = Math.round(ms / 60000);
+    if (mins < 1) return "now";
+    if (mins < 60) return "in " + mins + " min";
+    var h = Math.floor(mins / 60), r = mins % 60;
+    return "in " + h + "h " + (r < 10 ? "0" : "") + r + "m";
+  }
+
+  var els = {
+    clock: document.getElementById("clock"),
+    eyebrow: document.getElementById("eyebrow"),
+    title: document.getElementById("nowTitle"),
+    detail: document.getElementById("nowDetail"),
+    nextTitle: document.getElementById("nextTitle"),
+    nextCd: document.getElementById("nextCd"),
+    btn: document.getElementById("primaryBtn")
+  };
+
+  function buildTimeline() {
+    var legs = { out: "tl-out", show: "tl-show", back: "tl-back" };
+    for (var key in legs) {
+      var box = document.getElementById(legs[key]);
+      box.innerHTML = "";
+      STEPS.forEach(function (s, i) {
+        if (s.leg !== key) return;
+        var row = document.createElement("div");
+        row.className = "step";
+        row.dataset.idx = i;
+        row.innerHTML =
+          '<div class="t">' + fmt(s.t) + '</div>' +
+          '<div><div class="h">' + s.h + '</div>' +
+          (s.d ? '<div class="d">' + s.d + '</div>' : '') + '</div>';
+        box.appendChild(row);
+      });
+    }
+  }
+
+  function currentIndex(n) {
+    var idx = -1;
+    for (var i = 0; i < STEPS.length; i++) { if (STEPS[i].t <= n) idx = i; }
+    return idx;
+  }
+
+  function paint() {
+    var n = now();
+    els.clock.textContent = fmt(n) + (offsetMs ? " preview" : "");
+
+    var chrono = STEPS.map(function (s, i) { return i; })
+      .sort(function (a, b) { return STEPS[a].t - STEPS[b].t; });
+    var cur = -1, nxt = -1;
+    chrono.forEach(function (i) {
+      if (STEPS[i].t <= n) cur = i;
+      else if (nxt === -1) nxt = i;
+    });
+
+    if (cur === -1) {
+      els.eyebrow.textContent = "Not yet";
+      els.title.textContent = "Doors at 6:30";
+      els.detail.textContent = "Leave the house at 5:20. Everything after that is on the clock below.";
+    } else {
+      var s = STEPS[cur];
+      els.eyebrow.textContent = "Right now";
+      els.title.textContent = s.h;
+      els.detail.textContent = s.d || "Started " + fmt(s.t) + ".";
+    }
+
+    if (nxt === -1) {
+      els.nextTitle.textContent = "Nothing left. Go to bed.";
+      els.nextCd.textContent = "";
+    } else {
+      els.nextTitle.textContent = STEPS[nxt].h;
+      els.nextCd.textContent = fmt(STEPS[nxt].t) + " \u00b7 " + gap(STEPS[nxt].t - n);
+    }
+
+    var goingHome = n >= at(21, 30);
+    els.btn.href = goingHome ? toPenn : toPier;
+    els.btn.innerHTML = goingHome
+      ? 'Uber to Penn Station<small>Walk to Pearl St first, then tap</small>'
+      : 'Uber to Pier 17<small>Pickup at 31st St and 7th Ave</small>';
+
+    document.querySelectorAll(".step").forEach(function (row) {
+      var i = +row.dataset.idx;
+      row.classList.toggle("past", STEPS[i].t <= n && i !== cur);
+      row.classList.toggle("live", i === cur);
+      var tag = row.querySelector(".tag");
+      if (i === cur && !tag) {
+        var badge = document.createElement("span");
+        badge.className = "tag";
+        badge.textContent = "now";
+        row.querySelector(".h").appendChild(badge);
+      } else if (i !== cur && tag) {
+        tag.remove();
+      }
+    });
+  }
+
+  /* ---------- storage ---------- */
+  var KEY_SHOTS = "pier17.shots", KEY_NOTES = "pier17.notes";
+  var storageOK = (function () {
+    try { localStorage.setItem("pier17.probe", "1"); localStorage.removeItem("pier17.probe"); return true; }
+    catch (e) { return false; }
+  })();
+  var shots = [];
+  if (storageOK) {
+    try { shots = JSON.parse(localStorage.getItem(KEY_SHOTS) || "[]"); } catch (e) { shots = []; }
+  }
+
+  var shelf = document.getElementById("shelf");
+  var shelfEmpty = document.getElementById("shelfEmpty");
+  var picker = document.getElementById("picker");
+
+  function saveShots() {
+    if (!storageOK) return true;
+    try { localStorage.setItem(KEY_SHOTS, JSON.stringify(shots)); return true; }
+    catch (e) {
+      shelfEmpty.textContent = "Out of room. Delete a photo before adding another.";
+      shelfEmpty.style.display = "block";
+      return false;
+    }
+  }
+
+  function drawShelf() {
+    shelf.innerHTML = "";
+    shots.forEach(function (s, i) {
+      var cell = document.createElement("div");
+      cell.className = "shot";
+      var img = document.createElement("img");
+      img.src = s.src;
+      img.alt = "Saved image " + (i + 1);
+      img.addEventListener("click", function () { openViewer(s.src); });
+      var kill = document.createElement("button");
+      kill.className = "kill";
+      kill.innerHTML = "&times;";
+      kill.setAttribute("aria-label", "Delete image " + (i + 1));
+      kill.addEventListener("click", function (e) {
+        e.stopPropagation();
+        shots.splice(i, 1);
+        saveShots();
+        drawShelf();
+      });
+      cell.appendChild(img);
+      cell.appendChild(kill);
+      shelf.appendChild(cell);
+    });
+
+    var add = document.createElement("button");
+    add.className = "addbtn";
+    add.innerHTML = '<span class="plus">+</span>Add photo';
+    add.addEventListener("click", function () { picker.click(); });
+    shelf.appendChild(add);
+
+    if (shots.length) {
+      shelfEmpty.style.display = "none";
+    } else {
+      shelfEmpty.style.display = "block";
+      shelfEmpty.textContent = storageOK
+        ? "Nothing saved yet. Tap the plus to add a photo."
+        : "This browser is blocking storage, so anything added here disappears on reload. It will stick once the app is on your home screen.";
+    }
+  }
+
+  function shrink(file, cb) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1500;
+        var scale = Math.min(1, max / Math.max(img.width, img.height));
+        var c = document.createElement("canvas");
+        c.width = Math.round(img.width * scale);
+        c.height = Math.round(img.height * scale);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        cb(c.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = function () { cb(null); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function () { cb(null); };
+    reader.readAsDataURL(file);
+  }
+
+  picker.addEventListener("change", function () {
+    var files = Array.prototype.slice.call(picker.files || []);
+    var left = files.length;
+    if (!left) return;
+    files.forEach(function (f) {
+      shrink(f, function (src) {
+        if (src) shots.push({ src: src, at: Date.now() });
+        if (--left === 0) { saveShots(); drawShelf(); }
+      });
+    });
+    picker.value = "";
+  });
+
+  var viewer = document.getElementById("viewer");
+  var viewerImg = document.getElementById("viewerImg");
+  function openViewer(src) { viewerImg.src = src; viewer.classList.add("on"); }
+  document.getElementById("viewerClose").addEventListener("click", function () {
+    viewer.classList.remove("on");
+    viewerImg.src = "";
+  });
+  viewer.addEventListener("click", function (e) {
+    if (e.target === viewer) { viewer.classList.remove("on"); viewerImg.src = ""; }
+  });
+
+  var notes = document.getElementById("notes");
+  var savedFlag = document.getElementById("savedFlag");
+  if (storageOK) notes.value = localStorage.getItem(KEY_NOTES) || "";
+  var noteTimer;
+  notes.addEventListener("input", function () {
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(function () {
+      if (!storageOK) { savedFlag.textContent = "Storage is blocked here, so this will not persist."; return; }
+      try {
+        localStorage.setItem(KEY_NOTES, notes.value);
+        savedFlag.textContent = "Saved";
+        setTimeout(function () { savedFlag.textContent = ""; }, 1600);
+      } catch (e) {
+        savedFlag.textContent = "Could not save. Storage is full.";
+      }
+    }, 400);
+  });
+
+  /* ---------- preview scrubber ---------- */
+  var scrub = document.getElementById("scrub");
+  scrub.addEventListener("input", function () {
+    var v = parseFloat(scrub.value);
+    var h = Math.floor(v), m = Math.round((v - h) * 60);
+    var target = at(h === 24 ? 23 : h, h === 24 ? 59 : m);
+    offsetMs = target.getTime() - Date.now();
+    paint();
+  });
+  document.getElementById("scrubReset").addEventListener("click", function () {
+    offsetMs = 0;
+    paint();
+  });
+
+  buildTimeline();
+  drawShelf();
+  paint();
+  setInterval(paint, 15000);
+
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+
+  /* Ask Chrome to keep saved photos and notes when storage gets tight. */
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persisted().then(function (already) {
+      if (!already) navigator.storage.persist();
+    }).catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
