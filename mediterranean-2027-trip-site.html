@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mediterranean 2027 · Rome → Athens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#08263B;      /* night sea */
+  --sea:#0E4C74;       /* aegean */
+  --seamid:#2C7BA8;
+  --foam:#F4F7F6;      /* whitewash, cool */
+  --foam2:#E8EFED;
+  --saffron:#E8A33D;   /* sun */
+  --saffron-deep:#C98220;
+  --coral:#D0603A;     /* used sparingly: warnings only */
+  --ink:#12293A;
+  --ink-soft:#48606F;
+  --line:#D4DEDC;
+  --ok:#3E7C5B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+  .wave,.ship,.reveal{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}}
+body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--foam);
+  font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif}
+a{color:var(--sea)}
+img{max-width:100%}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;z-index:50;background:rgba(8,38,59,.94);backdrop-filter:blur(8px);
+  display:flex;align-items:center;gap:6px;padding:10px 18px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav .brand{font-family:'Fraunces';font-weight:900;color:#fff;font-size:17px;margin-right:10px;white-space:nowrap}
+nav .brand span{color:var(--saffron)}
+nav a{color:#BFD6E4;text-decoration:none;font-size:13.5px;font-weight:500;padding:6px 11px;
+  border-radius:99px;white-space:nowrap;transition:background .2s,color .2s}
+nav a:hover{color:#fff;background:rgba(255,255,255,.09)}
+nav a.on{background:var(--saffron);color:var(--deep);font-weight:700}
+
+/* ---------- hero ---------- */
+header{position:relative;background:linear-gradient(180deg,var(--deep) 0%,var(--sea) 78%,#1A5F8C 100%);
+  color:#fff;overflow:hidden;padding:72px 24px 0}
+.hero-inner{max-width:1060px;margin:0 auto;position:relative;z-index:2}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--saffron)}
+header h1{font-size:clamp(46px,8.5vw,96px);font-weight:900;line-height:.95;letter-spacing:-.015em;margin:14px 0 6px}
+header h1 em{font-style:italic;font-weight:600;color:#8CC5E8;display:block;font-size:.62em}
+.hero-sub{max-width:560px;font-size:17.5px;color:#CDE2EF;margin-top:18px}
+.hero-sub strong{color:#fff}
+.hero-meta{display:flex;flex-wrap:wrap;gap:0;margin:36px 0 0;border-top:1px solid rgba(255,255,255,.25)}
+.hero-meta>div{flex:1 1 150px;padding:18px 22px 16px 0}
+.hero-meta .k{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#8FB6CC;font-weight:700}
+.hero-meta .v{font-family:'Fraunces';font-weight:700;font-size:22px;margin-top:3px}
+.hero-meta .v small{display:block;font-family:'Space Grotesk';font-weight:400;font-size:12.5px;color:#A9CADC}
+
+/* countdown */
+.count{display:flex;gap:14px;margin:30px 0 0;flex-wrap:wrap}
+.count .cell{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  border-radius:12px;padding:12px 0;text-align:center;flex:1 1 70px;max-width:110px}
+.count .n{font-family:'Fraunces';font-weight:900;font-size:34px;color:var(--saffron);line-height:1}
+.count .l{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#A9CADC;margin-top:5px}
+.count-cap{font-size:12.5px;color:#8FB6CC;margin-top:9px}
+
+/* waves + ship */
+.seaband{position:relative;height:130px;margin-top:44px}
+.wave{position:absolute;left:-60px;right:-60px;height:70px;bottom:0;opacity:.5}
+.wave svg{width:100%;height:100%}
+.wave.w1{bottom:34px;animation:drift 26s linear infinite;opacity:.32}
+.wave.w2{bottom:16px;animation:drift 19s linear infinite reverse;opacity:.42}
+.wave.w3{bottom:0;animation:drift 13s linear infinite;opacity:1}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-140px)}}
+.ship{position:absolute;bottom:52px;left:12%;width:120px;animation:bob 6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-7px) rotate(.7deg)}}
+
+/* ---------- layout ---------- */
+main{max-width:1060px;margin:0 auto;padding:0 24px}
+section{padding:64px 0 20px;scroll-margin-top:64px}
+.sec-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--saffron-deep)}
+section h2{font-size:clamp(30px,4.5vw,44px);font-weight:900;color:var(--deep);line-height:1.06;margin:8px 0 10px;letter-spacing:-.01em}
+.lede{max-width:640px;color:var(--ink-soft);font-size:17px;margin-bottom:30px}
+.lede strong{color:var(--ink)}
+
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h3{font-size:20px;font-weight:700;color:var(--deep);margin-bottom:8px}
+.card.deep{background:var(--deep);color:#D9E8F1;border-color:var(--deep)}
+.card.deep h3{color:#fff}
+.card.sun{background:#FBF3E2;border-color:#EDD9AE}
+.klabel{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--saffron-deep);margin-bottom:10px}
+.card.deep .klabel{color:var(--saffron)}
+
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-soft)}
+.kv .v{font-weight:700;color:var(--deep);text-align:right}
+.card.deep .kv{border-color:rgba(255,255,255,.14)}
+.card.deep .kv .k{color:#8FB6CC}.card.deep .kv .v{color:#fff}
+
+.callout{display:flex;gap:13px;border-radius:12px;padding:16px 18px;margin:20px 0;font-size:15px;line-height:1.55}
+.callout b{font-weight:700}
+.callout.warn{background:#FBEBE4;border-left:4px solid var(--coral)}
+.callout.warn b{color:#A8492A}
+.callout.info{background:#E7F0F6;border-left:4px solid var(--sea)}
+.callout.info b{color:var(--sea)}
+.callout.gold{background:#FBF3E2;border-left:4px solid var(--saffron)}
+.callout.gold b{color:var(--saffron-deep)}
+
+ul.d{list-style:none}
+ul.d li{padding:5px 0 5px 20px;position:relative;font-size:15.2px}
+ul.d li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--saffron)}
+.card.deep ul.d li::before{background:var(--saffron)}
+
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--saffron-deep);padding:0 12px 10px 0;border-bottom:2px solid var(--saffron)}
+td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.b{font-weight:700;color:var(--deep);white-space:nowrap}
+
+.pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:3.5px 11px;border-radius:99px}
+.pill.sea{background:var(--sea);color:#fff}
+.pill.gold{background:var(--saffron);color:var(--deep)}
+.pill.mute{background:var(--foam2);color:var(--ink-soft)}
+.pill.coral{background:var(--coral);color:#fff}
+
+/* voyage line */
+.voyage{position:relative;margin:34px 0 8px;padding-left:26px}
+.voyage::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;width:3px;
+  background:repeating-linear-gradient(180deg,var(--seamid) 0 9px,transparent 9px 16px)}
+.stop{position:relative;padding:0 0 26px 18px}
+.stop::before{content:"";position:absolute;left:-26px;top:6px;width:15px;height:15px;border-radius:50%;
+  background:#fff;border:3.5px solid var(--sea)}
+.stop.port::before{background:var(--saffron);border-color:var(--saffron-deep)}
+.stop .when{font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+.stop h3{font-size:22px;font-weight:700;color:var(--deep);margin:2px 0 4px}
+.stop p{font-size:15.2px;color:var(--ink-soft);max-width:640px}
+.stop .tags{margin:6px 0 2px;display:flex;gap:7px;flex-wrap:wrap}
+
+/* travelers */
+.tgroup{margin-bottom:26px}
+.tgroup h3{font-size:22px;color:var(--deep);margin-bottom:12px}
+.people{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.person{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:center}
+.person .init{width:46px;height:46px;border-radius:50%;margin:0 auto 9px;display:flex;align-items:center;
+  justify-content:center;font-family:'Fraunces';font-weight:900;font-size:19px;color:#fff}
+.person .nm{font-weight:700;font-size:15px;color:var(--deep)}
+.person .rl{font-size:12.5px;color:var(--ink-soft)}
+
+/* port cards */
+.portcard{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:22px}
+.portcard .ph{background:var(--deep);color:#fff;padding:16px 22px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.portcard .ph .num{font-family:'Fraunces';font-weight:900;font-size:22px;color:var(--saffron)}
+.portcard .ph h3{font-size:24px;font-weight:700;flex:1}
+.portcard .ph .dt{font-size:13px;color:#9FC2D6}
+.portcard .pb{padding:20px 22px}
+.portcard .pb .lead{font-size:16px;margin-bottom:14px;max-width:720px}
+
+/* checklist */
+.chk{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.chk h3{font-size:15px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--saffron-deep);margin-bottom:10px}
+.chk label{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--foam2);
+  font-size:15px;cursor:pointer}
+.chk label:last-child{border-bottom:none}
+.chk input{margin-top:4px;width:17px;height:17px;accent-color:var(--sea);flex:none}
+.chk label.done{color:#93A5AF;text-decoration:line-through}
+.chk-note{font-size:13px;color:var(--ink-soft);margin-top:14px}
+
+.cbtn{display:inline-block;background:var(--sea);color:#fff;text-decoration:none;font-weight:700;
+  font-size:14.5px;padding:11px 22px;border-radius:99px;transition:background .2s}
+.cbtn:hover{background:var(--deep)}
+.cbtn.unset{background:var(--foam2);color:var(--ink-soft);border:1.5px dashed #B9C7C4}
+
+/* today card + today stop */
+.today-card{display:none;background:rgba(255,255,255,.09);border:1px solid rgba(232,163,61,.55);
+  border-radius:16px;padding:20px 22px;margin:30px 0 0;max-width:640px}
+.today-card .tc-eyebrow{font-size:11px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--saffron)}
+.today-card h3{font-family:'Fraunces';font-weight:900;font-size:30px;color:#fff;margin:6px 0 4px}
+.today-card .tc-sub{font-size:15px;color:#CDE2EF}
+.today-card .tc-note{margin-top:12px;font-size:14px;color:#F3D9AF;border-top:1px solid rgba(255,255,255,.18);padding-top:12px}
+.today-card a{color:var(--saffron);font-weight:700}
+.stop.today::before{background:var(--saffron);border-color:#fff;box-shadow:0 0 0 5px rgba(232,163,61,.3);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(232,163,61,.32)}50%{box-shadow:0 0 0 10px rgba(232,163,61,.10)}}
+.stop .now-pill{display:inline-block;background:var(--saffron);color:var(--deep);font-size:10.5px;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:99px;margin-left:8px;vertical-align:2px}
+
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+footer{margin-top:70px;background:var(--deep);color:#9FC2D6;padding:54px 24px 70px;text-align:center}
+footer .serif{font-family:'Fraunces';font-weight:900;font-size:30px;color:#fff}
+footer .serif span{color:var(--saffron)}
+footer p{max-width:520px;margin:14px auto 0;font-size:14.5px}
+
+@media(max-width:640px){
+  section{padding:48px 0 14px}
+  .hero-meta .v{font-size:18px}
+  .count .n{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <span class="brand">MED<span>·</span>2027</span>
+  <a href="#route">Route</a>
+  <a href="#crew">Travelers</a>
+  <a href="#rome">Rome</a>
+  <a href="#embark">Embark</a>
+  <a href="#ports">Ports</a>
+  <a href="#athens">Athens</a>
+  <a href="#docs">Documents</a>
+  <a href="#pack">Packing</a>
+  <a href="#practical">Practical</a>
+  <a href="#connect">Stay Connected</a>
+  <a href="#rules">Ground Rules</a>
+  <a href="#sos">Emergencies</a>
+  <a href="#list">Checklist</a>
+</nav>
+
+<header>
+  <div class="hero-inner">
+    <div class="eyebrow">Three Families · One Ship · July 2027</div>
+    <h1>Rome to Athens<em>by way of the Greek Isles</em></h1>
+    <p class="hero-sub">Twelve of us, aboard Royal Caribbean's <strong>Explorer of the Seas</strong> —
+    two nights in Rome, seven nights at sea, five ports across Italy, Greece and Turkey,
+    and two full days in Athens to finish.</p>
+
+    <div class="count" id="count">
+      <div class="cell"><div class="n" id="cd">—</div><div class="l">Days</div></div>
+      <div class="cell"><div class="n" id="ch">—</div><div class="l">Hours</div></div>
+      <div class="cell"><div class="n" id="cm">—</div><div class="l">Min</div></div>
+      <div class="cell"><div class="n" id="cs">—</div><div class="l">Sec</div></div>
+    </div>
+    <div class="count-cap" id="countcap">…until the ship sails from Civitavecchia · July 5, 2027</div>
+
+    <div class="today-card" id="todaycard">
+      <div class="tc-eyebrow" id="tc-day">—</div>
+      <h3 id="tc-place">—</h3>
+      <div class="tc-sub" id="tc-sub">—</div>
+      <div class="tc-note" id="tc-note" style="display:none"></div>
+    </div>
+
+    <div class="hero-meta">
+      <div><div class="k">Travel Window</div><div class="v">Jul 3 – 14<small>2027</small></div></div>
+      <div><div class="k">Sailing</div><div class="v">7 Nights<small>Jul 5 – 12</small></div></div>
+      <div><div class="k">Party</div><div class="v">Twelve<small>Roe · La Conti · Guerriero · Dinella</small></div></div>
+      <div><div class="k">Flights</div><div class="v">Open-Jaw<small>Into Rome, home from Athens</small></div></div>
+    </div>
+  </div>
+  <div class="seaband">
+    <div class="ship">
+      <svg viewBox="0 0 120 54"><path d="M6 34 L114 34 L102 50 L18 50 Z" fill="#F4F7F6"/>
+      <rect x="34" y="18" width="52" height="16" rx="2" fill="#F4F7F6"/>
+      <rect x="44" y="8" width="9" height="10" fill="#E8A33D"/><rect x="62" y="8" width="9" height="10" fill="#E8A33D"/>
+      <rect x="40" y="22" width="7" height="7" fill="#0E4C74"/><rect x="54" y="22" width="7" height="7" fill="#0E4C74"/>
+      <rect x="68" y="22" width="7" height="7" fill="#0E4C74"/></svg>
+    </div>
+    <div class="wave w1"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path d="M0 40 Q 70 20 140 40 T 280 40 T 420 40 T 560 40 T 700 40 T 840 40 T 980 40 T 1120 40 T 1260 40 V70 H0 Z" fill="#2C7BA8"/></svg></div>
+    <div class="wave w2"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path d="M0 40 Q 70 22 140 40 T 280 40 T 420 40 T 560 40 T 700 40 T 840 40 T 980 40 T 1120 40 T 1260 40 V70 H0 Z" fill="#1A5F8C"/></svg></div>
+    <div class="wave w3"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path d="M0 42 Q 70 24 140 42 T 280 42 T 420 42 T 560 42 T 700 42 T 840 42 T 980 42 T 1120 42 T 1260 42 V70 H0 Z" fill="#F4F7F6"/></svg></div>
+  </div>
+</header>
+
+<main>
+<!-- ============ ROUTE ============ -->
+<section id="route">
+  <div class="sec-eyebrow">The Shape of It</div>
+  <h2>Twelve Days, Point to Point</h2>
+  <p class="lede">We fly into Rome and home from Athens — no doubling back. Gold dots are days
+  ashore. If anything here conflicts with a document from Royal Caribbean, the cruise line wins;
+  flag it in the group chat.</p>
+
+  <div class="voyage reveal">
+    <div class="stop"><div class="when">Sat · Jul 3</div><h3>Land in Rome</h3>
+      <p>Overnight flight from the New York area, landing Fiumicino in the morning. Easy day: check in, eat, walk, stay awake until a normal bedtime.</p></div>
+    <div class="stop port"><div class="when">Sun · Jul 4</div><h3>Rome, the Full Day</h3>
+      <div class="tags"><span class="pill gold">One big sight</span><span class="pill mute">Timed tickets</span></div>
+      <p>Vatican or Colosseum — one, not both. Evening: pack, confirm the morning transfer.</p></div>
+    <div class="stop port"><div class="when">Mon · Jul 5</div><h3>Embarkation — Civitavecchia</h3>
+      <div class="tags"><span class="pill coral">Hard deadline</span></div>
+      <p>Vans to the port at 9 a.m. The ship sails with or without us. This is the one day with zero flexibility.</p></div>
+    <div class="stop port"><div class="when">Tue · Jul 6</div><h3>Naples, Italy</h3>
+      <p>Pompeii, Herculaneum, the Amalfi Coast, or the best pizza on earth. Ship docks right at the city.</p></div>
+    <div class="stop port"><div class="when">Wed · Jul 7</div><h3>Sicily — Messina</h3>
+      <p>Taormina's Greek theatre, Mount Etna, or a short stroll to the noon astronomical clock.</p></div>
+    <div class="stop"><div class="when">Thu · Jul 8</div><h3>At Sea</h3>
+      <p>The rest day. Pool, spa, long lunch — and the day we all confirm Santorini plans out loud.</p></div>
+    <div class="stop port"><div class="when">Fri · Jul 9</div><h3>Santorini, Greece</h3>
+      <div class="tags"><span class="pill coral">Tender port</span><span class="pill mute">Hardest logistics</span></div>
+      <p>Anchored in the caldera, small boats ashore, cable car up the cliff. Read the port guide. Twice.</p></div>
+    <div class="stop port"><div class="when">Sat · Jul 10</div><h3>Ephesus — Kuşadası, Turkey</h3>
+      <div class="tags"><span class="pill mute">Different country</span></div>
+      <p>A marble Roman city, staggeringly preserved, seriously hot. Early start wins.</p></div>
+    <div class="stop port"><div class="when">Sun · Jul 11</div><h3>Mykonos, Greece</h3>
+      <p>Whitewashed maze, windmills, beaches. Last full day — settle accounts tonight.</p></div>
+    <div class="stop port"><div class="when">Mon · Jul 12</div><h3>Disembark — Athens</h3>
+      <p>Off the ship at Piraeus, into the city, and straight into vacation part two. Easy afternoon, dinner in Plaka.</p></div>
+    <div class="stop port"><div class="when">Tue · Jul 13</div><h3>Athens, the Full Day</h3>
+      <p>Acropolis, museums, the Agora — or a coast run to Cape Sounion. A real day, unhurried, no ship clock.</p></div>
+    <div class="stop"><div class="when">Wed · Jul 14</div><h3>Fly Home</h3>
+      <p>Athens airport, three hours early, home by evening US time. Everyone heavier by one suitcase of olive oil.</p></div>
+  </div>
+</section>
+
+<!-- ============ TRAVELERS ============ -->
+<section id="crew">
+  <div class="sec-eyebrow">The Party</div>
+  <h2>Twelve of Us</h2>
+  <p class="lede">Three families and change, ages 16 to 72, across multiple staterooms. Every
+  reservation gets linked so we dine together and disembark together.</p>
+
+  <div class="tgroup reveal"><h3>Roe</h3>
+    <div class="people">
+      <div class="person"><div class="init" style="background:#0E4C74">D</div><div class="nm">Dave</div><div class="rl">Suite 9570 · Deck 9</div></div>
+      <div class="person"><div class="init" style="background:#0E4C74">D</div><div class="nm">Danielle</div><div class="rl">Suite 9570 · Deck 9</div></div>
+      <div class="person"><div class="init" style="background:#0E4C74">B</div><div class="nm">Blake</div><div class="rl">Suite 9570 · Deck 9</div></div>
+      <div class="person"><div class="init" style="background:#0E4C74">C</div><div class="nm">Chelsea</div><div class="rl">Suite 9570 · Deck 9</div></div>
+    </div></div>
+
+  <div class="tgroup reveal"><h3>La Conti</h3>
+    <div class="people">
+      <div class="person"><div class="init" style="background:#2C7BA8">L</div><div class="nm">Lou</div><div class="rl">Stateroom 8252</div></div>
+      <div class="person"><div class="init" style="background:#2C7BA8">A</div><div class="nm">Andrea</div><div class="rl">Stateroom 8252</div></div>
+    </div></div>
+
+  <div class="tgroup reveal"><h3>Guerriero</h3>
+    <div class="people">
+      <div class="person"><div class="init" style="background:#C98220">J</div><div class="nm">John</div><div class="rl"></div></div>
+      <div class="person"><div class="init" style="background:#C98220">J</div><div class="nm">Jeannine</div><div class="rl"></div></div>
+      <div class="person"><div class="init" style="background:#C98220">G</div><div class="nm">Giovanni</div><div class="rl"></div></div>
+      <div class="person"><div class="init" style="background:#C98220">A</div><div class="nm">Anthony</div><div class="rl"></div></div>
+      <div class="person"><div class="init" style="background:#C98220">B</div><div class="nm">Bell</div><div class="rl"></div></div>
+    </div></div>
+
+  <div class="tgroup reveal"><h3>Dinella</h3>
+    <div class="people">
+      <div class="person"><div class="init" style="background:#3E7C5B">K</div><div class="nm">Kathy</div><div class="rl"></div></div>
+    </div></div>
+
+  <div class="callout gold reveal"><div><b>Twelve travelers unlocks a real group airfare.</b>
+  Airlines' group desks typically start at ten passengers on the same itinerary — we now clear
+  that bar. A group contract usually means a locked fare with a deposit now and names submitted
+  later. Dave is pricing this against standard fares before anyone books individually —
+  <b>nobody book flights solo until the group email goes out.</b></div></div>
+
+  <div class="callout info reveal"><div><b>Every household carries its own travel insurance.</b>
+  Book it within about 21 days of your first cruise payment to lock in the pre-existing condition
+  waiver — this matters for every one of us, and more with each birthday. Add each new
+  non-refundable cost (flights, hotels) to your policy within 21 days of paying for it.</div></div>
+</section>
+
+<!-- ============ ROME ============ -->
+<section id="rome">
+  <div class="sec-eyebrow">July 3 – 4</div>
+  <h2>Rome, Before the Ship</h2>
+  <p class="lede">Two nights, one real day. The early arrival is insurance against a delayed
+  flight — sightseeing is the bonus, not the point.</p>
+
+  <div class="grid g2">
+    <div class="card reveal"><div class="klabel">Saturday · Arrival Day</div>
+      <h3>Land, Settle, Stay Awake</h3>
+      <ul class="d">
+        <li>Overnight flight lands FCO in the morning; clear of the airport by mid-morning</li>
+        <li>Pre-booked vans into the city — twelve people do not wing ground transport</li>
+        <li>Italy runs 6 hours ahead of New Jersey. No naps past mid-afternoon</li>
+        <li>Evening: an easy stroll — Pantheon, Trevi, Piazza Navona. Free, no tickets, unbeatable</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Sunday · The Full Day</div>
+      <h3>One Big Sight, Not Two</h3>
+      <ul class="d">
+        <li><b>Vatican Museums &amp; Sistine Chapel</b> — 3–4 hours; shoulders and knees covered, enforced</li>
+        <li><b>Colosseum + Forum + Palatine</b> — one combined ticket, 3–4 hours, almost no shade</li>
+        <li>Both need timed-entry tickets bought months ahead. Splitting into two groups by interest is fine</li>
+        <li>Evening: pack, set out passports, confirm the vans for 9 a.m.</li>
+      </ul></div>
+  </div>
+
+  <div class="callout warn reveal"><div><b>Summer transport strikes are a real thing in Italy.</b>
+  They're announced days ahead and run fixed windows. We check the strike calendar on July 3–4;
+  if one is called for the 5th, the vans leave earlier. Nobody free-lances the morning of.</div></div>
+</section>
+
+<!-- ============ EMBARK ============ -->
+<section id="embark">
+  <div class="sec-eyebrow">Monday · July 5</div>
+  <h2>Embarkation Day</h2>
+  <p class="lede"><strong>The one day that cannot slip.</strong> The ship leaves Civitavecchia —
+  a port town 45–75 minutes from Rome — whether or not we're on it.</p>
+
+  <div class="grid g2">
+    <div class="card deep reveal"><div class="klabel">The Timeline</div>
+      <div class="kv"><span class="k">8:00</span><span class="v">Bags down, breakfast done</span></div>
+      <div class="kv"><span class="k">9:00</span><span class="v">Vans depart the hotel</span></div>
+      <div class="kv"><span class="k">10:15</span><span class="v">Arrive cruise terminal</span></div>
+      <div class="kv"><span class="k">11:30</span><span class="v">All twelve aboard</span></div>
+      <div class="kv"><span class="k">First hour</span><span class="v">Muster drill — mandatory</span></div>
+      <div class="kv"><span class="k">Evening</span><span class="v">Sail away</span></div>
+    </div>
+    <div class="card reveal"><div class="klabel">Carry On, Never Check</div>
+      <ul class="d">
+        <li>Passports and all travel documents</li>
+        <li>Every medication, in original labeled bottles</li>
+        <li>Phones, chargers, valuables</li>
+        <li>Swimsuit and a change of clothes</li>
+      </ul>
+      <p style="font-size:13.5px;color:var(--ink-soft);margin-top:12px">Checked bags can take until
+      dinnertime to reach your cabin. Anything you need before then rides on your shoulder.</p></div>
+  </div>
+
+  <div class="callout warn reveal"><div><b>All-aboard is not departure time.</b> Every port, all
+  week: the ship closes its doors 60–90 minutes before it sails. Whatever the daily program says,
+  our rule is back aboard <b>one hour before all-aboard</b>. With twelve people, one straggler
+  is a group problem.</div></div>
+</section>
+
+<!-- ============ PORTS ============ -->
+<section id="ports">
+  <div class="sec-eyebrow">July 6 – 11</div>
+  <h2>The Ports</h2>
+  <p class="lede">What's actually worth your one day in each. Ship-sponsored excursions cost more
+  but the ship waits for them; independent tours are better and cheaper but the ship does not wait.
+  Book independents with wide margins.</p>
+
+  <div class="portcard reveal">
+    <div class="ph"><span class="num">06</span><h3>Naples</h3><span class="dt">Tue, July 6 · Italy · docks at the city</span></div>
+    <div class="pb">
+      <p class="lead">Loud, chaotic, gorgeous, and the birthplace of pizza. Easiest independent port of the week.</p>
+      <table>
+        <tr><th>Option</th><th>The honest version</th><th>Time</th></tr>
+        <tr><td class="b">Pompeii</td><td>The famous one. Vast and extraordinary — with a guide. Without one, a lot of hot broken walls.</td><td>5–6h</td></tr>
+        <tr><td class="b">Herculaneum</td><td>Smaller, better preserved, thin crowds. The smart pick for mixed ages.</td><td>3–4h</td></tr>
+        <tr><td class="b">Amalfi Coast</td><td>Breathtaking — and mostly a bus on switchbacks. Motion sickness is common.</td><td>7–8h</td></tr>
+        <tr><td class="b">Naples itself</td><td>Spaccanapoli, real pizza, and the Archaeological Museum, which holds Pompeii's actual treasures.</td><td>Flexible</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="portcard reveal">
+    <div class="ph"><span class="num">07</span><h3>Sicily · Messina</h3><span class="dt">Wed, July 7 · Italy</span></div>
+    <div class="pb">
+      <p class="lead">Messina is the gateway, not the destination. The prizes are up the coast and up the mountain.</p>
+      <table>
+        <tr><th>Option</th><th>The honest version</th><th>Time</th></tr>
+        <tr><td class="b">Taormina</td><td>Hill town over the sea, Greek theatre framing Etna. Touristy and completely worth it.</td><td>4–5h</td></tr>
+        <tr><td class="b">Mount Etna</td><td>Europe's most active volcano. Bring a layer — 95°F at the pier, cool at the craters. Closed shoes.</td><td>5–6h</td></tr>
+        <tr><td class="b">Messina on foot</td><td>Ten-minute walk. The cathedral's astronomical clock performs at noon — charming, free.</td><td>2h</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="portcard reveal">
+    <div class="ph"><span class="num">09</span><h3>Santorini</h3><span class="dt">Fri, July 9 · Greece · <b style="color:#E8A33D">tender port</b></span></div>
+    <div class="pb">
+      <p class="lead">The postcard island, and the most demanding logistics of the cruise. This is the day that
+      goes wrong for groups that improvise.</p>
+      <ul class="d">
+        <li>The ship anchors in the caldera; small boats (<b>tenders</b>) run ashore to Skala</li>
+        <li>Skala to Fira: <b>cable car</b>, donkey path, or 588 steps on foot</li>
+        <li>The afternoon cable-car queue back down is the worst bottleneck of the week — an hour-plus is routine</li>
+        <li>Ship excursions get <b>tender priority</b>; independents wait</li>
+        <li>Oia — the village in every photo — is a bus or taxi beyond Fira. Stunning, crowded, and the famous sunset happens after we sail</li>
+      </ul>
+      <div class="callout warn" style="margin-bottom:0"><div><b>Group rule for Santorini:</b> heading down the cliff
+      <b>two hours</b> before the last tender, not one. All twelve of us. No exceptions, no "one more photo."</div></div>
+    </div>
+  </div>
+
+  <div class="portcard reveal">
+    <div class="ph"><span class="num">10</span><h3>Ephesus · Kuşadası</h3><span class="dt">Sat, July 10 · Turkey</span></div>
+    <div class="pb">
+      <p class="lead">A Roman city of a quarter-million people, preserved to the point you walk its marble main
+      street past a two-story library façade. Twenty minutes inland from the pier.</p>
+      <ul class="d">
+        <li><b>Go early.</b> July at Ephesus clears 95°F with almost no shade</li>
+        <li>The <b>Terrace Houses</b> cost extra and earn it — mosaics and frescoes under a roof, in shade</li>
+        <li>House of the Virgin Mary is nearby and commonly bundled into the same tour</li>
+        <li>US citizens need no visa for Turkey — passport only. Currency is the lira; cards and euros work in tourist areas at mediocre rates</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="portcard reveal">
+    <div class="ph"><span class="num">11</span><h3>Mykonos</h3><span class="dt">Sun, July 11 · Greece</span></div>
+    <div class="pb">
+      <p class="lead">Whitewashed alleys, hilltop windmills, Little Venice on the waterfront. Ships use the new
+      port two kilometers out — take the shuttle.</p>
+      <ul class="d">
+        <li>Chora, the main town, is a deliberate maze — getting lost is the point</li>
+        <li>Beaches range from family-quiet to famously loud. Ask before committing the group to one</li>
+        <li>The <b>meltemi</b> wind blows hard — hats need chin straps, small boat trips get cancelled</li>
+        <li>Last full day: settle onboard accounts tonight, set out disembarkation bags</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ATHENS ============ -->
+<section id="athens">
+  <div class="sec-eyebrow">July 12 – 14</div>
+  <h2>Two Days in Athens</h2>
+  <p class="lede">The cruise ends the morning of July 12; we fly July 14. Two nights in the city
+  means Athens gets treated like a destination instead of an exit ramp.</p>
+
+  <div class="grid g2">
+    <div class="card reveal"><div class="klabel">Disembarkation</div>
+      <ul class="d">
+        <li>Settle onboard accounts on the 11th, not the morning of</li>
+        <li>Labeled bags outside the cabin the night before, or carry everything off yourself</li>
+        <li>Piraeus to central Athens: 30–45 minutes. Pre-booked vans for twelve</li>
+      </ul></div>
+    <div class="card sun reveal"><div class="klabel">Monday Afternoon · Arrival Day</div>
+      <ul class="d">
+        <li>Check in, decompress — twelve people coming off a ship deserve a slow first afternoon</li>
+        <li><b>Plaka and Monastiraki</b> — wander the old quarter, no tickets, no schedule</li>
+        <li>Dinner outdoors with the lit Parthenon overhead</li>
+      </ul></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card reveal"><div class="klabel">Tuesday · The Full Day</div>
+      <ul class="d">
+        <li><b>Acropolis early</b> — gates open around 8; beat the heat and the tour buses</li>
+        <li><b>Acropolis Museum</b> after — air-conditioned, superb, directly below the hill</li>
+        <li><b>Ancient Agora</b> if legs allow — where Athens actually lived; Socrates argued here</li>
+        <li>Real shoes: the Acropolis marble is polished slick by 2,500 years of feet</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Or Trade the Afternoon For</div>
+      <ul class="d">
+        <li><b>Cape Sounion</b> — Temple of Poseidon on a cliff over the Aegean, ~90 minutes down the coast. The classic sunset finale, back late</li>
+        <li><b>National Archaeological Museum</b> — the gold Mask of Agamemnon and the Antikythera mechanism</li>
+        <li>Or nothing at all: a rooftop pool and a long lunch is a legitimate final day</li>
+      </ul></div>
+  </div>
+
+  <div class="callout info reveal"><div><b>Clocks move twice.</b> Italy is 6 hours ahead of New
+  Jersey; Greece and Turkey are 7. The ship may keep one "ship's time" all week regardless of
+  your phone. <b>Every all-aboard time is ship's time</b> — trust the clock at the gangway.</div></div>
+
+  <div class="callout gold reveal"><div><b>July 14:</b> Athens airport (ATH) is ~45 minutes from
+  the center. Twelve people, international, peak season: at the airport <b>three hours</b> before
+  departure. Flight details go here once booked.</div></div>
+</section>
+
+<!-- ============ DOCS ============ -->
+<section id="docs">
+  <div class="sec-eyebrow">Read This One First</div>
+  <h2>Documents — All Twelve of Us</h2>
+  <p class="lede"><strong>Every requirement on this page applies to each traveler individually.</strong>
+  One missing document is one person not boarding, and none of it can be fixed at the pier.</p>
+
+  <div class="grid g2">
+    <div class="card reveal"><div class="klabel">Passports</div>
+      <h3>Valid Through January 2028</h3>
+      <p style="font-size:15px">At least six months past our July 14 return. Renewals run months
+      in peak season — check yours <b>by January 2027</b>. Minors' passports expire in five years,
+      not ten: Blake, Chelsea and Bell's need a specific look.</p></div>
+    <div class="card reveal"><div class="klabel">ETIAS — New for This Trip</div>
+      <h3>Europe's Travel Authorization</h3>
+      <p style="font-size:15px">Required for Americans starting in 2027. About <b>€20</b>, applied
+      online, valid three years. <b>All twelve of us need one, kids included.</b> Without it, the
+      airline can deny boarding in Newark.</p></div>
+  </div>
+
+  <div class="callout warn reveal"><div><b>ETIAS scam warning.</b> The official portal is run by
+  the European Union and costs about €20. Sites charging $80 to "process" it are middlemen at
+  best. We apply together through the official site once it opens — wait for the group message.</div></div>
+
+  <div class="callout info reveal"><div><b>Turkey needs nothing extra.</b> US citizens enter
+  visa-free, and cruise passengers ashore for the day are covered regardless. Passport only for
+  the Ephesus stop.</div></div>
+
+  <div class="card reveal" style="margin-top:20px"><div class="klabel">The Countdown</div>
+    <table>
+      <tr><th>When</th><th>What has to happen</th></tr>
+      <tr><td class="b">Aug 2026</td><td>Group airfare priced and booked — Rome in, Athens out. Insurance updated within 21 days of paying</td></tr>
+      <tr><td class="b">Sep 2026</td><td>Rome and Athens hotel blocks and all vans booked</td></tr>
+      <tr><td class="b">Late 2026</td><td><b>ETIAS applications — all twelve</b>, the month the portal opens</td></tr>
+      <tr><td class="b">Jan 2027</td><td>Passport audit for all twelve; renewals submitted immediately. Rome timed-entry tickets bought</td></tr>
+      <tr><td class="b">Apr 6, 2027</td><td><b>Final cruise payment due</b> — each household</td></tr>
+      <tr><td class="b">Apr 2027</td><td>Shore excursions booked — Santorini and Ephesus first, they sell out</td></tr>
+      <tr><td class="b">May 21, 2027</td><td>Online check-in opens, 45 days out. Do it that day — boarding windows are first come, first served</td></tr>
+      <tr><td class="b">Jun 2027</td><td>Phone plans, prescriptions, euros, card notifications, medical cards</td></tr>
+      <tr><td class="b">Jul 3, 2027</td><td>Wheels up</td></tr>
+    </table></div>
+</section>
+
+<!-- ============ PACKING ============ -->
+<section id="pack">
+  <div class="sec-eyebrow">90°F and Bright</div>
+  <h2>Packing for a Mediterranean July</h2>
+  <p class="lede">Hot, dry, and windy in the islands; the ship's air conditioning runs cold.
+  Every list below has ended someone's day when ignored.</p>
+
+  <div class="grid g3">
+    <div class="card reveal"><div class="klabel">Clothing</div>
+      <ul class="d">
+        <li>Light and loose — linen and cotton over synthetics</li>
+        <li>One layer for cold dining rooms and Etna's altitude</li>
+        <li>Two swimsuits, so one is always dry</li>
+        <li>Shoulders-and-knees cover for churches — the Vatican enforces it</li>
+        <li>One smart outfit for the dressier evenings</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Feet</div>
+      <ul class="d">
+        <li><b>Broken-in walking shoes</b> — the single most important item anyone packs</li>
+        <li>Sandals for ship and beach</li>
+        <li>Closed shoes for ruins and volcanic grit</li>
+        <li>Blister plasters. You will use them or lend them</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Sun &amp; Heat</div>
+      <ul class="d">
+        <li>High-SPF sunscreen — scarce and pricey in port shops</li>
+        <li>Wide-brim hat <b>with a chin cord</b> — the meltemi wind is serious</li>
+        <li>Refillable water bottle each</li>
+        <li>Electrolyte packets — heat exhaustion sneaks up on every age</li>
+      </ul></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card deep reveal"><div class="klabel">Medications — Non-Negotiable</div>
+      <ul class="d">
+        <li>Full trip supply <b>plus one week</b> of buffer</li>
+        <li>Original labeled bottles, never a loose pill organizer</li>
+        <li><b>Carry-on only</b>, never checked</li>
+        <li>A written med-and-dose list carried separately</li>
+        <li>Critical meds split across two bags when traveling with a partner</li>
+      </ul>
+      <p style="font-size:13.5px;color:#8FB6CC;margin-top:12px">The ship's medical center stocks
+      basics but cannot refill your prescriptions. Neither can a Turkish pharmacy on a Saturday.</p></div>
+    <div class="card reveal"><div class="klabel">Electrics</div>
+      <ul class="d">
+        <li>Europe runs 220–240V with round-pin Type C/F outlets — US plugs don't fit</li>
+        <li>Two or three adapters per household</li>
+        <li>Phones and laptops are dual-voltage; hair tools often are not — check the label</li>
+        <li>A <b>non-surge</b> USB hub for the cabin. Surge strips get confiscated at ship security</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- ============ PRACTICAL ============ -->
+<section id="practical">
+  <div class="sec-eyebrow">Money · Phones · Streets</div>
+  <h2>The Practical Stuff</h2>
+
+  <div class="grid g2">
+    <div class="card reveal"><div class="klabel">Money</div>
+      <ul class="d">
+        <li>Italy and Greece: <b>euro</b>. Turkey: <b>lira</b>, though cards and euros work in tourist zones</li>
+        <li>Cards nearly everywhere; carry €100–200 cash per household for taxis, tips, stalls</li>
+        <li>Withdraw at <b>bank ATMs</b>, not the standalone machines in tourist squares</li>
+        <li>Always pay in <b>local currency</b> — "charge in USD?" is a bad rate in a costume</li>
+        <li>Tell your card issuers the dates; confirm one card per household has real headroom</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Phones</div>
+      <ul class="d">
+        <li>Sort international plans <b>before</b> leaving — confirm Italy, Greece <b>and Turkey</b>; Turkey isn't always included</li>
+        <li>eSIM data plans are usually far cheaper than carrier day passes</li>
+        <li>At sea there is no cell signal; ship wifi is a paid package per device</li>
+        <li>Download offline maps of every port before leaving home</li>
+      </ul></div>
+  </div>
+
+  <div class="callout warn reveal"><div><b>Airplane-mode the moment you board — all twelve
+  phones.</b> The ship's onboard cell tower is a maritime network no day pass covers. People come
+  home to four-figure bills from data left on overnight. Teens' phones especially: wifi on,
+  cellular data off, all week.</div></div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card reveal"><div class="klabel">Pickpockets</div>
+      <ul class="d">
+        <li>Rome, Naples and Athens have skilled, organized crews working the tourist crush</li>
+        <li>Crossbody bags, zipped, worn in front. Nothing in back pockets, ever</li>
+        <li>Passports live in the cabin safe; carry photocopies ashore</li>
+        <li>The distraction <i>is</i> the theft — a spill, a petition clipboard, a helpful stranger at the ATM</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Heat</div>
+      <ul class="d">
+        <li>Ephesus, the Forum and the Acropolis are serious midday exposure with no shade</li>
+        <li>Drink before you're thirsty; Rome's public fountains are safe and cold</li>
+        <li>Hard walking in mornings and late afternoons; shade and gelato in between</li>
+        <li>Headache, cramps, or confusion in anyone = stop, shade, fluids, say so immediately</li>
+      </ul></div>
+  </div>
+</section>
+
+
+<!-- ============ CONNECT ============ -->
+<section id="connect">
+  <div class="sec-eyebrow">One Trip, One Thread</div>
+  <h2>Stay Connected</h2>
+  <p class="lede">This page is the map; these two tools are the radio. Join both
+  <strong>before we fly</strong> — setting them up over ship wifi is miserable.</p>
+
+  <div class="grid g3">
+    <div class="card reveal" style="text-align:center">
+      <div style="width:56px;height:56px;border-radius:16px;background:#E7EEFB;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#3457A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <h3>Shared Album</h3>
+      <p style="font-size:14.5px;color:var(--ink-soft);margin:6px 0 14px">One Google Photos album.
+      Everyone uploads, everyone's pictures pool automatically, nobody texts 40 photos.</p>
+      <a class="cbtn" data-slot="album" href="#" onclick="return joinLink(this,'the shared album link')">Open the album</a>
+    </div>
+    <div class="card reveal" style="text-align:center">
+      <div style="width:56px;height:56px;border-radius:16px;background:#FBEFDC;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C98220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3>Location Circle</h3>
+      <p style="font-size:14.5px;color:var(--ink-soft);margin:6px 0 14px">Google Maps location sharing,
+      trip dates only. For finding each other in a Mykonos alley — it switches off July 14.</p>
+      <a class="cbtn" data-slot="loc" href="#" onclick="return joinLink(this,'the location sharing setup')">Set up sharing</a>
+    </div>
+  </div>
+
+  <div class="callout info reveal"><div><b>Both of these run on wifi</b> — which means they keep
+  working on the ship's wifi package while phones sit in airplane mode, exactly how we'll be
+  running them all week. Join before we fly; setting things up over ship wifi is miserable.</div></div>
+</section>
+
+<!-- ============ RULES ============ -->
+<section id="rules">
+  <div class="sec-eyebrow">Twelve People, One Plan</div>
+  <h2>Ground Rules</h2>
+  <p class="lede">Proposed, not decreed — we'll settle these together before we fly. But some
+  version of each is what keeps a twelve-person, three-generation trip from turning into a
+  search party.</p>
+
+  <div class="grid g2">
+    <div class="card deep reveal"><div class="klabel">The Agreements</div>
+      <ul class="d">
+        <li><b>One shared thread</b> for the whole party, agreed on before we fly — whatever the families already use</li>
+        <li><b>Daily check-in at breakfast:</b> today's plan and the all-aboard time, said out loud</li>
+        <li><b>Nobody ashore alone</b> without telling someone the plan and a return time</li>
+        <li><b>Meeting point in every port:</b> the gangway, on the hour</li>
+        <li><b>Back aboard one hour before all-aboard.</b> Before it, not at it</li>
+        <li><b>Split up freely.</b> Twelve people don't need to want the same thing — ruins and beaches can happen the same day</li>
+      </ul></div>
+    <div class="card reveal"><div class="klabel">Onboard Basics</div>
+      <ul class="d">
+        <li>Your <b>SeaPass card</b> is room key, gangway ID, and wallet in one</li>
+        <li><b>My Time Dining:</b> we reserve a nightly block for the full group early in the week</li>
+        <li>Most nights are smart casual; expect one or two dressier evenings</li>
+        <li>Drink and wifi packages are cheaper bought before boarding</li>
+        <li>The <b>daily program</b> lists tomorrow's times — read it every night, carry it ashore</li>
+      </ul></div>
+  </div>
+
+  <div class="callout info reveal"><div><b>If someone misses the ship</b> — it's recoverable.
+  Go straight to the <b>port agent</b> (name and number printed in the daily program), who
+  coordinates catching up at the next port. Then message the group. Nobody improvises alone.</div></div>
+</section>
+
+<!-- ============ SOS ============ -->
+<section id="sos">
+  <div class="sec-eyebrow">Hope Not to Need It</div>
+  <h2>If Something Goes Wrong</h2>
+  <p class="lede">Save these numbers in every phone — including the teenagers' — before we fly.
+  The whole point is that anyone can act when it counts.</p>
+
+  <div class="grid g2">
+    <div class="card reveal"><div class="klabel">Emergency Numbers</div>
+      <div class="kv"><span class="k">Italy · Greece · Turkey</span><span class="v">112</span></div>
+      <div class="kv"><span class="k">Aboard ship</span><span class="v">Ship's emergency line, or any crew member</span></div>
+      <div class="kv"><span class="k">Royal Caribbean</span><span class="v">866-562-7625</span></div>
+      <div class="kv"><span class="k">Your insurer's 24-hr assist line</span><span class="v">On your policy card</span></div>
+    </div>
+    <div class="card reveal"><div class="klabel">Medical, Ashore or Aboard</div>
+      <ul class="d">
+        <li>The ship's medical center is physician-staffed and equipped for cardiac emergencies</li>
+        <li>Care aboard is charged to your account and claimed back through insurance</li>
+        <li><b>Call your insurer's assistance line early</b> — evacuations and big hospital bills usually need prior authorization</li>
+        <li>Keep every receipt and discharge paper. Claims live or die on paperwork</li>
+      </ul></div>
+  </div>
+
+  <div class="callout gold reveal"><div><b>Every traveler fills out a medical card</b> — name,
+  conditions, meds and doses, allergies, insurer, emergency contact — and gives a copy to one
+  other person in the group. The printed trip guide has the template. It exists so someone
+  <i>else</i> can answer for you when you can't.</div></div>
+</section>
+
+<!-- ============ CHECKLIST ============ -->
+<section id="list">
+  <div class="sec-eyebrow">Tick As You Go</div>
+  <h2>The Master Checklist</h2>
+  <p class="lede">Checkboxes here are for satisfaction only — they reset when you close the page.
+  The real tracking lives in the group chat: claim a line, report it done.</p>
+
+  <div class="grid g2">
+    <div class="chk reveal"><h3>A Year Out</h3>
+      <label><input type="checkbox"><span>Group airfare priced against standard fares, then booked</span></label>
+      <label><input type="checkbox"><span>Each household's insurance updated within 21 days of paying</span></label>
+      <label><input type="checkbox"><span>Rome and Athens hotels booked, two nights each</span></label>
+      <label><input type="checkbox"><span>All four van transfers booked for twelve</span></label>
+    </div>
+    <div class="chk reveal"><h3>Six Months Out</h3>
+      <label><input type="checkbox"><span>ETIAS applied for — all twelve travelers</span></label>
+      <label><input type="checkbox"><span>All twelve passports valid past January 2028</span></label>
+      <label><input type="checkbox"><span>Rome timed-entry tickets purchased</span></label>
+      <label><input type="checkbox"><span>Final cruise payments made by April 6 — every household</span></label>
+      <label><input type="checkbox"><span>Shore excursions booked — Santorini and Ephesus first</span></label>
+    </div>
+    <div class="chk reveal"><h3>Six Weeks Out</h3>
+      <label><input type="checkbox"><span>Online check-in done the day it opens (May 21)</span></label>
+      <label><input type="checkbox"><span>All reservations linked as one dining party</span></label>
+      <label><input type="checkbox"><span>Luggage tags and SetSail passes printed</span></label>
+      <label><input type="checkbox"><span>Drink and wifi packages decided per household</span></label>
+    </div>
+    <div class="chk reveal"><h3>Two Weeks Out</h3>
+      <label><input type="checkbox"><span>International phone plans confirmed — including Turkey</span></label>
+      <label><input type="checkbox"><span>Prescriptions refilled with a week of buffer</span></label>
+      <label><input type="checkbox"><span>Card issuers notified; one high-limit card per household</span></label>
+      <label><input type="checkbox"><span>Medical cards filled in and swapped</span></label>
+      <label><input type="checkbox"><span>Emergency numbers saved in all twelve phones</span></label>
+      <label><input type="checkbox"><span>Offline maps downloaded; group chat live</span></label>
+      <label><input type="checkbox"><span>Home covered: mail, pets, thermostat, someone with a key</span></label>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="serif">See you on the pier<span>.</span></div>
+  <p>Civitavecchia · July 5, 2027. Spot something wrong or out of date in this guide?
+  Say so in the group chat — it's easier to fix a plan in 2026 than a problem in 2027.</p>
+</footer>
+
+<script>
+// ---- trip day awareness ----
+// Each day: date (YYYY-MM-DD), IANA tz for that day, place, sub, optional note (HTML), stopIndex on the voyage line
+const DAYS = [
+ {d:'2027-07-03', tz:'Europe/Rome',   place:'Rome',                 sub:'Arrival day — land, settle, stay awake till dark.', stop:0},
+ {d:'2027-07-04', tz:'Europe/Rome',   place:'Rome',                 sub:'The full day. One big sight, then wander.', note:'Tonight: pack, passports out, confirm the 9 a.m. vans.', stop:1},
+ {d:'2027-07-05', tz:'Europe/Rome',   place:'Civitavecchia — Embarkation', sub:'Vans at 9:00. The ship will not wait.', note:'<b>Hard deadline day.</b> Bags down 8:00, vans 9:00, aboard by 11:30. Muster drill in the first hour.', stop:2},
+ {d:'2027-07-06', tz:'Europe/Rome',   place:'Naples, Italy',        sub:'Pompeii, Herculaneum, Amalfi — or the pizza.', note:'Back aboard <b>one hour before all-aboard</b>. Check the daily program for tonight\'s time.', stop:3},
+ {d:'2027-07-07', tz:'Europe/Rome',   place:'Sicily — Messina',     sub:'Taormina, Etna, or the noon astronomical clock.', note:'Etna group: bring the layer and closed shoes. Everyone: back one hour before all-aboard.', stop:4},
+ {d:'2027-07-08', tz:'Europe/Rome',   place:'At Sea',               sub:'The rest day. Pool, spa, long lunch.', note:'Tonight at dinner: confirm tomorrow\'s Santorini plan out loud, all twelve.', stop:5},
+ {d:'2027-07-09', tz:'Europe/Athens', place:'Santorini, Greece',    sub:'Tender port. The hardest logistics of the week.', note:'<b>Group rule:</b> heading down the cliff <b>two hours</b> before the last tender. The afternoon cable-car queue runs an hour+.', stop:6},
+ {d:'2027-07-10', tz:'Europe/Istanbul', place:'Ephesus — Kuşadası, Turkey', sub:'Marble streets, ancient library, serious heat.', note:'Go early, carry water. Passports not needed ashore — cabin safe, carry photocopies.', stop:7},
+ {d:'2027-07-11', tz:'Europe/Athens', place:'Mykonos, Greece',      sub:'The maze, the windmills, the beaches.', note:'Last full day: settle onboard accounts tonight, set out disembarkation bags.', stop:8},
+ {d:'2027-07-12', tz:'Europe/Athens', place:'Athens — Disembark',   sub:'Off at Piraeus, into the city, dinner in Plaka.', stop:9},
+ {d:'2027-07-13', tz:'Europe/Athens', place:'Athens',               sub:'The full day. Acropolis early, museum after — or Sounion at sunset.', stop:10},
+ {d:'2027-07-14', tz:'Europe/Athens', place:'Athens — Fly Home',    sub:'ATH is 45 minutes out. Airport three hours early.', note:'Twelve people, international, peak season. Leave margin.', stop:11},
+];
+function dateIn(tz){
+  return new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+}
+function tripState(){
+  // compare using Athens time as the trip clock; then refine with the matched day's own tz
+  const today = dateIn('Europe/Athens');
+  if(today < DAYS[0].d) return {mode:'before'};
+  if(today > DAYS[DAYS.length-1].d) return {mode:'after'};
+  let day = DAYS.find(x=>x.d===today) || DAYS.find(x=>x.d===dateIn('Europe/Rome'));
+  return day ? {mode:'during', day, idx:DAYS.indexOf(day)} : {mode:'before'};
+}
+function renderState(){
+  const st = tripState();
+  const card = document.getElementById('todaycard');
+  const count = document.getElementById('count');
+  const cap = document.getElementById('countcap');
+  if(st.mode==='during'){
+    count.style.display='none'; cap.style.display='none'; card.style.display='block';
+    document.getElementById('tc-day').textContent = 'Today · Day ' + (st.idx+1) + ' of 12';
+    document.getElementById('tc-place').textContent = st.day.place;
+    document.getElementById('tc-sub').textContent = st.day.sub;
+    const note = document.getElementById('tc-note');
+    if(st.day.note){ note.innerHTML = st.day.note; note.style.display='block'; } else { note.style.display='none'; }
+    // mark voyage line
+    const stops = document.querySelectorAll('.voyage .stop');
+    stops.forEach(s=>{s.classList.remove('today'); const old=s.querySelector('.now-pill'); if(old) old.remove();});
+    const s = stops[st.day.stop];
+    if(s){ s.classList.add('today');
+      const h = s.querySelector('h3');
+      if(h){ const pill=document.createElement('span'); pill.className='now-pill'; pill.textContent='We are here'; h.appendChild(pill); } }
+  } else if(st.mode==='after'){
+    count.style.display='none'; card.style.display='none';
+    cap.textContent = 'Home again. 12 days, 3 countries, 12 of us — and the photo album to prove it.';
+  }
+}
+renderState(); setInterval(renderState, 60*60*1000);
+
+// countdown to sail-away (Civitavecchia local time, CEST = UTC+2)
+const target = new Date('2027-07-05T17:00:00+02:00').getTime();
+function tick(){
+  let ms = Math.max(0, target - Date.now());
+  const d = Math.floor(ms/86400000); ms -= d*86400000;
+  const h = Math.floor(ms/3600000); ms -= h*3600000;
+  const m = Math.floor(ms/60000);   ms -= m*60000;
+  const s = Math.floor(ms/1000);
+  cd.textContent = d.toLocaleString(); ch.textContent = h; cm.textContent = m; cs.textContent = s;
+}
+tick(); setInterval(tick, 1000);
+
+// scroll spy
+const links=[...document.querySelectorAll('nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const spy=new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){
+    links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id));
+  }});
+},{rootMargin:'-30% 0px -60% 0px'});
+secs.forEach(s=>s&&spy.observe(s));
+
+// reveal
+const rev=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');rev.unobserve(e.target)}
+}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>rev.observe(el));
+
+// connect buttons: real link if set, otherwise explain
+function joinLink(el, what){
+  const url = el.getAttribute('data-url');
+  if(url){ window.open(url,'_blank'); return false; }
+  alert('Not wired up yet — Dave will drop ' + what + ' here once it exists. Watch the group email.');
+  return false;
+}
+// mark unset buttons visually
+document.querySelectorAll('.cbtn').forEach(b=>{ if(!b.getAttribute('data-url')) b.classList.add('unset'); });
+
+// checklist strikethrough (in-memory only)
+document.querySelectorAll('.chk input').forEach(c=>{
+  c.addEventListener('change',()=>c.closest('label').classList.toggle('done',c.checked));
+});
+</script>
+</body>
+</html>
